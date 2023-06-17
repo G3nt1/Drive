@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        /* Styles for folders */
+
+        .card {
+            border: none;
+        }
+
+        .card-body {
+            display: flex;
+            align-items: center;
+        }
+
+        .folder-icon {
+            background-image: url("{% static 'icons/d-folder.png' %}");
+            width: 150px;
+            height: 100px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin-right: 10px;
+        }
+
+        .card-text-wrapper {
+            flex-grow: 1;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .menu-options {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            padding: 12px 16px;
+            z-index: 1;
+        }
+
+        .menu:hover .menu-options {
+            display: block;
+        }
+
+
+        .file-icon {
+            height: 150px;
+            width: 170px;
+            object-fit: cover;
+        }
+
+        .smaller-image {
+            max-height: 150px;
+            max-width: 170px;
+        }
+
+        .card-text-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-options {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            padding: 12px 16px;
+            z-index: 1;
+        }
+
+        .menu:hover .menu-options {
+            display: block;
+        }
+
+
+    </style>
+    <script>
+        // Function to open the folder
+        function openFolder(folderId) {
+            let url = "{% url 'folder' folder_id=0 %}";
+            url = url.replace("0", folderId);
+            window.location.href = url;
+        }
+    </script>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="mb-4" style="color: #4F709C">Welcome {{ user.first_name|upper }}</h3>
+
+            <div class="d-flex flex-wrap">
+                {% if results_folder %}
+                    {% for folder in results_folder %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <div class="folder-icon"></div>
+                                    <div class="card-text-wrapper">
+                                        <h5 class="card-title text-info">{{ folder.folder_name }}</h5>
+                                        <p class="text-muted">Created: {{ folder.folder_date }}</p>
+                                        <div class="menu">
+                                            <div class="menu-options">
+                                                <a href="{% url 'folder' folder.id %}" class="dropdown-item">Open</a>
+                                                <a
+                                                        href="{% url 'update_folder' folder.id %}"
+                                                        class="dropdown-item"
+                                                >Rename</a
+                                                >
+                                                <form method="POST" action="{% url 'delete_folder' folder.id %}"
+                                                      onsubmit="return confirm('Are you sure you want to delete?');">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="dropdown-item">Delete</button>
+                                                </form>
+                                            </div>
+                                            <span>&#8942;</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>No folders found.</p>
+                    {% endfor %}
+                {% endif %}
+
+                {% if results_files %}
+                    {% for file in results_files %}
+                        <div class="col-md-2 mb-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="menu">
+                                        <div class="card-text-wrapper">
+                                            {% if file.file_upload.url|lower|slice:'-4:' == ".pdf" %}
+                                                <img src="{% static 'icons/pdf-icon.png' %}" alt="PDF Icon"
+                                                     class="file-icon"/>
+                                            {% elif file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
+                                                <img src="{{ file.file_upload.url }}" alt="Image"
+                                                     class="file-icon smaller-image"/>
+                                            {% elif file.file_upload.url|lower|slice:'-4:' == '.psd' %}
+                                                <img
+                                                        src="{% static 'icons/default-psd.png' %}"
+                                                        alt="File Icon"
+                                                        class="file-icon"
+                                                />
+                                            {% elif file.file_upload.url|upper|slice:'-4:' == '.MP4' %}
+                                                <img
+                                                        src="{% static 'icons/default-video.png' %}"
+                                                        alt="File Icon"
+                                                        class="file-icon"
+                                                />
+                                            {% elif file.file_upload.url|lower|slice:'-4:' == '.xls' %}
+                                                <img
+                                                        src="{% static 'icons/exel-default.png' %}"
+                                                        alt="File Icon"
+                                                        class="file-icon"
+                                                />
+                                            {% elif file.file_upload.url|lower|slice:'-4:' == '.doc' %}
+                                                <img
+                                                        src="{% static 'icons/default-word.png' %}"
+                                                        alt="File Icon"
+                                                        class="file-icon"
+                                                />
+                                            {% elif file.file_upload.url|lower|slice:'-4:' == '.zip' %}
+                                                <img
+                                                        src="{% static 'icons/default-zip.png' %}"
+                                                        alt="File Icon"
+                                                        class="file-icon"
+                                                />
+                                            {% elif file.file_upload.url|lower|slice:'-4:' == '.rar' %}
+                                                <img
+                                                        src="{% static 'icons/default-rar.png' %}"
+                                                        alt="File Icon"
+                                                        class="file-icon"
+                                                />
+
+                                            {% else %}
+                                                <img src="{% static 'icons/default-image.png' %}" alt="File Icon"
+                                                     class="file-icon"/>
+                                            {% endif %}
+                                            <h5 class="card-title">{{ file.file_name }}</h5>
+                                        </div>
+                                        <div class="menu-options">
+                                            <a href="#" onclick="openFile('{{ file.file_upload.url }}');"
+                                               class="dropdown-item">Open</a>
+                                            <form method="POST" action="{% url 'delete_file' file.id %}"
+                                                  onsubmit="return confirm('Are you sure you want to delete?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="dropdown-item">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if results_folder|length == 0 and results_files|length == 0 %}
+                    <p>No search results.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script>
+        function openFile(url) {
+            window.open(url, '_blank');
+        }
+    </script>
+{% endblock %}

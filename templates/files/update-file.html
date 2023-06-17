@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2 style="color: #4f709c">Update File "{{ files.file_name }}"</h2>
+            <form method="post" enctype="multipart/form-data" action="{% url 'rename_files' files.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_file_upload">File:</label>
+                    <input
+                            type="file"
+                            name="file_upload"
+                            class="form-control-file"
+                            id="id_file_upload"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="id_file_name">File Name:</label>
+                    <input
+                            type="text"
+                            name="file_name"
+                            class="form-control"
+                            id="id_file_name"
+                            value="{{ files.file_name }}"
+                    />
+                    <div class="form-group">
+                        <label for="id_is_important">Is Important:</label>
+                        <input type="checkbox" name="is_important" id="id_is_important"/>
+                    </div>
+                    <br/>
+                </div>
+                <br/>
+                <button type="submit" class="btn" style="color: #4f709c">
+                    Rename
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

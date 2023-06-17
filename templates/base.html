@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EN Drive</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+            crossorigin="anonymous"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}"/>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Bootstrap components
+            $('[data-toggle="collapse"]').collapse();
+        });
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">MyDrive</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                </ul>
+                <form class="d-flex" role="search" action="{% url 'search' %}">
+                    <input class="form-control me-2" type="search" value="{{ search_term }}" placeholder="Search"
+                           name="q"
+                           aria-label="Search">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+                <!-- Example single danger button -->
+                <div class="btn-group dropstart">
+                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        {{ user.first_name|first|upper }} {{ user.last_name|first|upper }}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Separated link</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="row mt-2">
+        <div class="col-3">
+            {% if user.is_authenticated %}
+                <div class="list-group">
+                    <a href="{% url 'home' %} "
+                       class="list-group-item list-group-item-action  {% if active_menu == 'home' %}active{% endif %}"
+                       aria-current="true">
+                        <i class="bi bi-house-fill"></i> Home
+                    </a>
+                    <a href="#"
+                       class="list-group-item list-group-item-action {% if active_menu == 'shared_with_me' %}active{% endif %}">
+                        <i class="bi bi-house-fill"></i> Shared with me</a>
+                    <a href="{% url 'is_important' %}"
+                       class="list-group-item list-group-item-action {% if active_menu == 'important' %}active{% endif %}">
+                        <i class="bi bi-star-fill"></i> Important</a>
+                    <a href="{% url 'trash_list' %}"
+                       class="list-group-item list-group-item-action {% if active_menu == 'trash' %}active{% endif %}">
+                        <i class="bi bi-trash3-fill"></i> Trash
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-9">{% block content %} {% endblock %}</div>
+    </div>
+</div>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"
+></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+</body>
+</html>

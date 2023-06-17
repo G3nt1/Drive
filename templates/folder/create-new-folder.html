@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2 style="color: #4F709C">Create a New Folder</h2>
+            {% if parent_folder_id %}
+                <form method="POST" action="{% url 'create_folder' parent_folder_id=parent_folder_id %}">
+            {% else %}
+                <form method="POST" action="{% url 'create_folder_parent' %}">
+            {% endif %}
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="hidden" name="parent_folder_id" value="{{ parent_folder_id }}">
+            <button type="submit" class="btn" style="color: #4F709C">Create</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            // Update the hidden input value when the folder selection changes
+            $('#id_parent_folder').change(function () {
+                let selectedFolderId = $(this).val();
+                $('input[name="parent_folder_id"]').val(selectedFolderId);
+            });
+        });
+    </script>
+{% endblock %}

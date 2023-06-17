@@ -1,0 +1,77 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+    <style>
+        .folder-icon {
+            background-image: url("{% static 'icons/d-folder.png' %}");
+            width: 150px;
+            height: 100px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin-right: 10px;
+            cursor: pointer; /* Add cursor style to indicate clickable */
+        }
+
+    </style>
+
+    <script>
+        // Function to open the folder
+        function openFolder(folderId) {
+            let url = "{% url 'folder' folder_id=0 %}";
+            url = url.replace("0", folderId);
+            window.location.href = url;
+        }
+    </script>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="documents-table table table-striped table-hover table-bordered table-responsive">
+                <thead>
+                <tr class="text-strong">
+                    <th>Name</th>
+                    <th>Last Modified</th>
+                    <th>File size</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for folder in folders %}
+                    <tr>
+                        <td><a href="{% url 'folder' folder.id %}">
+                            <i class="bi bi-folder-fill text-warning"></i> {{ folder.folder_name }}</a>
+                        </td>
+                        <td>{{ folder.folder_date }}</td>
+                        <td>-</td>
+                        <td class="text-end actions">
+                            <i class="bi bi-pencil-fill" title="Rename"></i>
+                            {% if folder.is_important %}
+                                <i class="bi bi-star-fill" title="Star"></i>
+                            {% else %}
+                                <i class="bi bi-star" title="Star"></i>
+                            {% endif %}
+                            <i class="bi bi-trash3-fill" title="Move to trash"></i>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% for file in files %}
+                    <tr>
+                        <td>
+                            <i class="bi bi-file-earmark-text-fill"></i> {{ file.file_name }}
+                        </td>
+                        <td>{{ file.upload_date }}</td>
+                        <td>-</td>
+                        <td class="text-end actions">
+                            <i class="bi bi-pencil-fill" title="Rename"></i>
+                            <i class="bi bi-star-fill" title="Star"></i>
+                            <i class="bi bi-trash3-fill" title="Move to trash"></i>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function openFile(url) {
+            window.open(url, "_blank");
+        }
+    </script>
+
+{% endblock %}
