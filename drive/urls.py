@@ -16,14 +16,15 @@ urlpatterns = [
     path('delete_forever_file/<int:file_id>/', trashViews.delete_forever_files, name='delete_forever_file'),
 
     # Folder
-    path('create-folder_home/', fileFolderViews.create_folder, name='create_folder_parent'),
-    path('create-folder/<int:parent_folder_id>/', fileFolderViews.create_folder, name='create_folder'),
+    path('folder/create', fileFolderViews.create_folder, name="create_folder_root"),
+    path('folder/create/<int:parent_folder_id>/', fileFolderViews.create_folder, name="create_folder"),
     path('', views.home, name='home'),
     path('folder/<int:folder_id>/', fileFolderViews.folder, name='folder'),
     path('update-folder/<int:folder_id>/',
          fileFolderViews.update_folder, name='update_folder'),
     # Files
     path('upload-file/<int:folder_id>/', fileFolderViews.upload_file, name='upload_file'),
+    path('upload-file/', fileFolderViews.upload_file, name='upload_file_root'),
     path('rename-file/<int:file_id>/', fileFolderViews.rename_files, name='rename_files'),
 
     # Authenticated

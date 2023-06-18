@@ -23,7 +23,7 @@ class LoginForm(forms.Form):
 class FolderForm(forms.ModelForm):
     class Meta:
         model = Folder
-        fields = ['folder_name', 'is_important']
+        fields = ['folder_name']
 
 
 class FileUploadForm(forms.ModelForm):

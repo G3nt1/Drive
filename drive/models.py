@@ -18,7 +18,7 @@ class Folder(models.Model):
 
 class Files(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    folder = models.ForeignKey('Folder', on_delete=models.CASCADE, default=0)
+    folder = models.ForeignKey('Folder', on_delete=models.CASCADE, default=0, null=True)
     file_name = models.CharField(max_length=255)
     file_upload = models.FileField(
         blank=True, null=True, upload_to='media/files')

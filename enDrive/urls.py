@@ -6,7 +6,7 @@ from enDrive import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', include('drive.urls'))
 ]
 if settings.DEBUG:
