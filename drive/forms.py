@@ -30,3 +30,9 @@ class FileUploadForm(forms.ModelForm):
     class Meta:
         model = Files
         fields = ('file_upload',)
+
+
+class FileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Files
+        fields = ('file_upload', 'file_name')

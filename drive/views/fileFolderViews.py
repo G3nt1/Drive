@@ -3,7 +3,7 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
-from drive.forms import FolderForm, FileUploadForm
+from drive.forms import FolderForm, FileUploadForm, FileUpdateForm
 from drive.models import Folder, Files
 
 
@@ -59,7 +59,7 @@ def upload_file(request, folder_id=None):
                 file_upload.folder_id = folder_id
                 file_upload.user = request.user
                 file_upload.file_name = os.path.splitext(file.name)[0]
-                file_upload.file_upload = file
+
                 file_upload.save()
             return redirect('home')
     else:
@@ -72,12 +72,12 @@ def rename_files(request, file_id):
     files = Files.objects.get(id=file_id, user=request.user)
 
     if request.method == "POST":
-        form = FileUploadForm(request.POST, instance=files)
+        form = FileUpdateForm(request.POST, instance=files)
         if form.is_valid():
             files.file_name = form.cleaned_data['file_name']
             files.save()
             return redirect('home')
     else:
-        form = FileUploadForm(instance=files)
+        form = FileUpdateForm(instance=files)
 
     return render(request, 'files/update-file.html', {'form': form, 'files': files, 'file_id': file_id})
