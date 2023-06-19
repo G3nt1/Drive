@@ -33,20 +33,24 @@
                         <td>-</td>
                         <td class="text-end actions">
                             <form method="post" action="">
-                                <a href="{% url 'update_folder'  folder.id %}">
-                                    <i class="ti ti-pencil" title="Rename"></i></a>
-                                {% if folder.is_important %}
-                                    <a href="{% url 'unmark_folder' folder.id %}">
-                                        <i class="ti ti-star-filled text-warning" title="Star"></i></a>
-                                {% else %}
-                                    <a href="{% url 'mark_folder' folder.id %}">
-                                        <i class="ti ti-star" title="Star"></i></a>
-                                {% endif %}
-
-                                <div class="actions">
-                                    <a href="{% url 'delete_folder' folder.id %}">
-                                        <i class="ti ti-trash" title="Delete"></i>
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <a href="{% url 'update_folder' folder.id %}" class="me-2">
+                                        <i class="ti ti-pencil" title="Rename"></i>
                                     </a>
+                                    {% if folder.is_important %}
+                                        <a href="{% url 'unmark_folder' folder.id %}" class="me-2">
+                                            <i class="ti ti-star-filled text-warning" title="Important"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'mark_folder' folder.id %}" class="me-2">
+                                            <i class="ti ti-star" title="Important"></i>
+                                        </a>
+                                    {% endif %}
+                                    <div class="actions">
+                                        <a href="{% url 'delete_folder' folder.id %}">
+                                            <i class="ti ti-trash" title="Delete"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </form>
                         </td>
@@ -63,24 +67,29 @@
                         <td>{{ file.upload_date }}</td>
                         <td>-</td>
                         <td class="text-end actions">
-                            <a href="{% url 'rename_files' file.id %}">
-                                <i class="ti ti-pencil" title="Rename"></i></a>
-                            {% if file.is_important %}
-                                <a href="{% url 'unmark_file' file.id %}">
-                                    <i class="ti ti-star-filled text-warning" title="Important"></i></a>
-                            {% else %}
-                                <a href="{% url 'mark_file' file.id %}">
-                                    <i class="ti ti-star" title="Important"></i></a>
-                            {% endif %}
-
                             <form method="post" action="">
-                                <div class="actions">
-                                    <a href="{% url 'delete_file' file.id %}">
-                                        <i class="ti ti-trash" title="Delete"></i>
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <a href="{% url 'rename_files' file.id %}" class="me-2">
+                                        <i class="ti ti-pencil" title="Rename"></i>
                                     </a>
+                                    {% if file.is_important %}
+                                        <a href="{% url 'unmark_file' file.id %}" class="me-2">
+                                            <i class="ti ti-star-filled text-warning" title="Important"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'mark_file' file.id %}" class="me-2">
+                                            <i class="ti ti-star" title="Important"></i>
+                                        </a>
+                                    {% endif %}
+                                    <div class="actions">
+                                        <a href="{% url 'delete_file' file.id %}">
+                                            <i class="ti ti-trash" title="Delete"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </form>
                         </td>
+
                     </tr>
                 {% endfor %}
                 </tbody>
