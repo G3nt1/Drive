@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drive.apps.DriveConfig',
     'crispy_forms',
-    'crispy_bootstrap5'
+    'crispy_bootstrap5',
+    'multiupload',
 
 ]
 

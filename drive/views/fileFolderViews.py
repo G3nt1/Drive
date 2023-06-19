@@ -53,15 +53,14 @@ def upload_file(request, folder_id=None):
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            file_upload = form.save(commit=False)
-            file_upload.folder_id = folder_id
-            file_upload.user = request.user
-
-            # Set the file name to the uploaded file name
-            file = request.FILES['file_upload']
-            file_upload.file_name = os.path.splitext(file.name)[0]
-
-            file_upload.save()
+            files = request.FILES.getlist('file_upload')  # Get the list of uploaded files
+            for file in files:
+                file_upload = form.save(commit=False)
+                file_upload.folder_id = folder_id
+                file_upload.user = request.user
+                file_upload.file_name = os.path.splitext(file.name)[0]
+                file_upload.file_upload = file
+                file_upload.save()
             return redirect('home')
     else:
         form = FileUploadForm()
