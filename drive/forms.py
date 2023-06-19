@@ -29,4 +29,4 @@ class FolderForm(forms.ModelForm):
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = Files
-        fields = ('file_name', 'file_upload')
+        fields = ('file_upload',)

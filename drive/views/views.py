@@ -22,7 +22,7 @@ def trashItems(request):
     folders = Folder.objects.filter(user=request.user, is_deleted=True)
     files = Files.objects.filter(user=request.user, is_deleted=True)
 
-    return render(request, 'home.html', {
+    return render(request, 'trash/trash_list.html', {
         'folders': folders,
         'files': files,
         'active_menu': 'trash'

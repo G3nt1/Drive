@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -54,6 +56,11 @@ def upload_file(request, folder_id=None):
             file_upload = form.save(commit=False)
             file_upload.folder_id = folder_id
             file_upload.user = request.user
+
+            # Set the file name to the uploaded file name
+            file = request.FILES['file_upload']
+            file_upload.file_name = os.path.splitext(file.name)[0]
+
             file_upload.save()
             return redirect('home')
     else:

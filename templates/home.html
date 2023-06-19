@@ -9,7 +9,7 @@
                     Files </a>
             {% else %}
                 <a href="{% url 'create_folder_root' %}" class="btn btn-outline-secondary ">Create Folder</a>
-                <a href="{% url 'upload_file_root' %}" class="btn btn-outline-secondary">Upload Files Root</a>
+                <a href="{% url 'upload_file_root' %}" class="btn btn-outline-secondary">Upload Files</a>
             {% endif %}
 
         </div>
@@ -32,34 +32,53 @@
                         <td>{{ folder.folder_date }}</td>
                         <td>-</td>
                         <td class="text-end actions">
-                            <i class="ti ti-pencil" title="Rename"></i>
-                            {% if folder.is_important %}
-                                <i class="ti ti-star-filled text-warning" title="Star"></i>
-                            {% else %}
-                                <i class="ti ti-star" title="Star"></i>
-                            {% endif %}
-                            <form method="post" action="{% url 'delete_folder' folder_id=folder.id %}">
-                                button
+                            <form method="post" action="">
+                                <a href="{% url 'update_folder'  folder.id %}">
+                                    <i class="ti ti-pencil" title="Rename"></i></a>
+                                {% if folder.is_important %}
+                                    <a href="{% url 'unmark_folder' folder.id %}">
+                                        <i class="ti ti-star-filled text-warning" title="Star"></i></a>
+                                {% else %}
+                                    <a href="{% url 'mark_folder' folder.id %}">
+                                        <i class="ti ti-star" title="Star"></i></a>
+                                {% endif %}
+
+                                <div class="actions">
+                                    <a href="{% url 'delete_folder' folder.id %}">
+                                        <i class="ti ti-trash" title="Delete"></i>
+                                    </a>
+                                </div>
                             </form>
                         </td>
                     </tr>
                 {% endfor %}
                 {% for file in files %}
                     <tr>
-                        <td><a href="">
-                            <i class="ti ti-file text-success"></i> {{ file.file_name }}</a>
+                        <td>
+                            <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                <i class="ti ti-file text-success"></i> {{ file.file_name }}
+                            </a>
+
                         </td>
-                        <td>{{ file.file_upload }}</td>
+                        <td>{{ file.upload_date }}</td>
                         <td>-</td>
                         <td class="text-end actions">
-                            <i class="ti ti-pencil" title="Rename"></i>
-                            {% if folder.is_important %}
-                                <i class="ti ti-star-filled text-warning" title="Star"></i>
+                            <a href="{% url 'rename_files' file.id %}">
+                                <i class="ti ti-pencil" title="Rename"></i></a>
+                            {% if file.is_important %}
+                                <a href="{% url 'unmark_file' file.id %}">
+                                    <i class="ti ti-star-filled text-warning" title="Important"></i></a>
                             {% else %}
-                                <i class="ti ti-star" title="Star"></i>
+                                <a href="{% url 'mark_file' file.id %}">
+                                    <i class="ti ti-star" title="Important"></i></a>
                             {% endif %}
-                            <form method="post" action="{% url 'delete_file' file.id %}">
-                                button
+
+                            <form method="post" action="">
+                                <div class="actions">
+                                    <a href="{% url 'delete_file' file.id %}">
+                                        <i class="ti ti-trash" title="Delete"></i>
+                                    </a>
+                                </div>
                             </form>
                         </td>
                     </tr>
