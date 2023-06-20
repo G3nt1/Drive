@@ -44,4 +44,4 @@ def delete_forever_files(request, file_id):
     file = get_object_or_404(Files, id=file_id)
     file.delete()
     messages.success(request, "File deleted permanently.")
-    return redirect('home')
+    return redirect('trash_list')

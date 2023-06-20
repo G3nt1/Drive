@@ -8,11 +8,12 @@ from drive.models import Folder, Files
 
 
 def folder(request, folder_id):
+    parent_folder = get_object_or_404(Folder, pk=folder_id, user=request.user)
     child_folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=folder_id)
-    files = Files.objects.filter(folder_id=folder_id, is_deleted=False)
+    files = Files.objects.filter(user=request.user, folder=parent_folder, is_deleted=False)
     return render(request, 'home.html', {
         'folders': child_folders,
-        'folder': get_object_or_404(Folder, pk=folder_id, user=request.user),
+        'folder': parent_folder,
         'files': files
     })
 

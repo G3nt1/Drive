@@ -7,11 +7,11 @@ from drive.models import Folder, Files
 
 @login_required(login_url='login')
 def home(request):
-    folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
-    files = Files.objects.filter(user=request.user, is_deleted=False)
+    top_level_folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
+    files = Files.objects.filter(user=request.user, folder__isnull=True, is_deleted=False)
 
     return render(request, 'home.html', {
-        'folders': folders,
+        'folders': top_level_folders,
         'parent_folder_id': None,
         'active_menu': 'home',
         'files': files,

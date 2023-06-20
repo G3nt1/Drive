@@ -19,7 +19,7 @@ class Folder(models.Model):
 
 
 def validate_file_size(value):
-    max_size = 100 * 1024 * 1024  # 100MB
+    max_size = 100000000
     if value.size > max_size:
         raise ValidationError(f"The file size should not exceed {filesizeformat(max_size)}.")
 

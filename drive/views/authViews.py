@@ -12,7 +12,7 @@ def register(request):
             # Set the email as the username
             user.username = form.cleaned_data['email']
             user.save()
-            return redirect('login')
+            return redirect('user_login')
     else:
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})

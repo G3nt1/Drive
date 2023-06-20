@@ -254,10 +254,12 @@
             </button>
             <div class="navbar-nav flex-row order-md-last">
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
-                       aria-label="Open user menu">
-                        <span class="avatar rounded">GM</span>
-                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
+                           aria-label="Open user menu">
+                            <span class="avatar rounded">{{ user.first_name|first|upper }} {{ user.last_name|first|upper }}</span>
+                        </a>
+                    {% endif %}
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <a href="{% url 'user_logout' %}" class="dropdown-item">Logout</a>
                         {#                        <a href="./profile.html" class="dropdown-item">Profile</a>#}
