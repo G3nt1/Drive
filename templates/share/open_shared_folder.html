@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Shared Folder: {{ folder.folder_name }}</h2>
+
+    <h3>Files:</h3>
+    <ul>
+        {% for file in folder.files.all %}
+            <li>{{ file.file_name }}</li>
+        {% empty %}
+            <li>No files in the shared folder</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Subfolders:</h3>
+    <ul>
+        {% for subfolder in folder.child_folders.all %}
+            <li>{{ subfolder.folder_name }}</li>
+        {% empty %}
+            <li>No subfolders in the shared folder</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

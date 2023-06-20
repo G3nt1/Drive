@@ -36,3 +36,24 @@ class FileUpdateForm(forms.ModelForm):
     class Meta:
         model = Files
         fields = ('file_upload', 'file_name')
+
+
+class ShareFolderForm(forms.Form):
+    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        fields = ['user']  # Specify the order of fields, if desired
+        labels = {
+            'user': 'Select User',  # Custom label for the 'user' field
+        }
+
+
+class ShareFileForm(forms.Form):
+    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        fields = ['user']  # Specify the order of fields, if desired
+        labels = {
+            'user': 'Select User',  # Custom label for the 'user' field
+        }
+        # Add any other desired options

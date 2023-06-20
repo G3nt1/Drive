@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
-from drive.views import trashViews, fileFolderViews, authViews, views, zipfile, important
+from drive.views import trashViews, fileFolderViews, authViews, views, zipfile, important, share
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -45,6 +45,11 @@ urlpatterns = [
     path('unmark_important_folder/<int:folder_id>', important.unmark_important_folder, name='unmark_folder'),
     path('mark_important_file/<int:file_id>', important.mark_important_file, name='mark_file'),
     path('unmark_important_file/<int:file_id>', important.unmark_important_file, name='unmark_file'),
+
+    path('share_folder/<int:folder_id>', share.share_folder, name='share_folder'),
+    path('share_file/<int:file_id>', share.share_file, name='share_file'),
+    path('share_with_me/', share.share_with_me, name='share_with_me'),
+    path('open_shared-folder/<int:folder_id>/', share.open_shared_folder, name='open_shared_folder'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Shared Folders</h2>
+    <ul>
+        {% for folder in shared_folders %}
+            <a href="{% url 'open_shared_folder' folder.id %}">
+                {{ folder.folder.folder_name }}</a>
+            <li>{{ folder.user.email }}</li>
+
+        {% empty %}
+            <li>No shared folders</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Shared Files</h2>
+    <ul>
+        {% for file in shared_files %}
+            <li>{{ file.file.file_name }}</li>
+            <li>{{ file.user.email }}</li>
+
+        {% empty %}
+            <li>No shared files</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

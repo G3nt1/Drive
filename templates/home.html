@@ -59,6 +59,9 @@
                                         <a href="{% url 'delete_folder' folder.id %}">
                                             <i class="ti ti-trash" title="Delete"></i>
                                         </a>
+                                        <a href="{% url 'share_folder' folder.id %}" class="me-2">
+                                            <i class="ti ti-brand-stackshare" title="Important"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </form>
@@ -87,12 +90,15 @@
                                         </a>
                                     {% else %}
                                         <a href="{% url 'mark_file' file.id %}" class="me-2">
-                                            <i class="ti ti-star" title="Important"></i>
+                                            <i class="ti ti-star" title="Share"></i>
                                         </a>
                                     {% endif %}
                                     <div class="actions">
                                         <a href="{% url 'delete_file' file.id %}">
                                             <i class="ti ti-trash" title="Delete"></i>
+                                        </a>
+                                        <a href="{% url 'share_file' file.id %}" class="me-2">
+                                            <i class="ti ti-brand-stackshare" title="Share"></i>
                                         </a>
                                     </div>
                                 </div>

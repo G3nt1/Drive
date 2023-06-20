@@ -35,7 +35,7 @@ def validate_file_size(value):
         raise ValidationError(f"The file size should not exceed {filesizeformat(max_size)}.")
 
 
-class File(models.Model):
+class Files(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     folder = models.ForeignKey('Folder', on_delete=models.CASCADE, default=0, null=True)
     file_name = models.CharField(max_length=255)
@@ -48,7 +48,7 @@ class File(models.Model):
 
 
 class FileShare(models.Model):
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    file = models.ForeignKey(Files, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_accepted = models.BooleanField(default=False)
     shared_date = models.DateTimeField(auto_now_add=True)
