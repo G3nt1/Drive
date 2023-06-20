@@ -13,9 +13,20 @@ class Folder(models.Model):
     folder_date = models.DateTimeField(auto_now_add=True)
     is_important = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
+    shared_with = models.ManyToManyField(User, through='FolderShare', related_name='shared_folders')
 
     def __str__(self):
         return self.folder_name
+
+
+class FolderShare(models.Model):
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_accepted = models.BooleanField(default=False)
+    shared_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} shared folder {self.folder.folder_name}"
 
 
 def validate_file_size(value):
@@ -24,7 +35,7 @@ def validate_file_size(value):
         raise ValidationError(f"The file size should not exceed {filesizeformat(max_size)}.")
 
 
-class Files(models.Model):
+class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     folder = models.ForeignKey('Folder', on_delete=models.CASCADE, default=0, null=True)
     file_name = models.CharField(max_length=255)
@@ -33,6 +44,14 @@ class Files(models.Model):
     upload_date = models.DateTimeField(auto_now_add=True)
     is_important = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
+    shared_with = models.ManyToManyField(User, through='FileShare', related_name='shared_files')
+
+
+class FileShare(models.Model):
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_accepted = models.BooleanField(default=False)
+    shared_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.file_name
+        return f"{self.user.username} shared file {self.file.file_name}"

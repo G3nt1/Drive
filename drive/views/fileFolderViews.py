@@ -18,6 +18,15 @@ def folder(request, folder_id):
     })
 
 
+def files(request, file_id):
+    file_instance = Files.objects.get(id=file_id)  # Replace <file_id> with the actual file ID
+    file_size = file_instance.file_upload.file.size
+    return render(request, 'home.html', {
+
+        'files_size': file_size
+    })
+
+
 @login_required(login_url='login')
 def create_folder(request, parent_folder_id=None):
     if request.method == 'POST':
@@ -52,17 +61,21 @@ def update_folder(request, folder_id):
 
 def upload_file(request, folder_id=None):
     if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            files = request.FILES.getlist('file_upload')  # Get the list of uploaded files
-            for file in files:
+        files = request.FILES.getlist('file_upload')  # Get the list of uploaded files
+
+        for file in files:
+            form = FileUploadForm(request.POST, request.FILES)
+            if form.is_valid():
                 file_upload = form.save(commit=False)
                 file_upload.folder_id = folder_id
                 file_upload.user = request.user
                 file_upload.file_name = os.path.splitext(file.name)[0]
+                file_upload.file_upload = file
 
                 file_upload.save()
-            return redirect('home')
+
+        return redirect('home')
+
     else:
         form = FileUploadForm()
 

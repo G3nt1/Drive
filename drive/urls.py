@@ -5,6 +5,9 @@ from django.urls import path
 from drive.views import trashViews, fileFolderViews, authViews, views, zipfile, important
 
 urlpatterns = [
+    path('', views.home, name='home'),
+    # big views
+    path('home/', views.homeView, name='home-views'),
     # # Trash
     path('trash/', views.trashItems, name='trash_list'),
     path('delete_folder/<int:folder_id>/', trashViews.delete_folder, name='delete_folder'),
@@ -18,7 +21,7 @@ urlpatterns = [
     # Folder
     path('folder/create', fileFolderViews.create_folder, name="create_folder_root"),
     path('folder/create/<int:parent_folder_id>/', fileFolderViews.create_folder, name="create_folder"),
-    path('', views.home, name='home'),
+
     path('folder/<int:folder_id>/', fileFolderViews.folder, name='folder'),
     path('update-folder/<int:folder_id>/',
          fileFolderViews.update_folder, name='update_folder'),
@@ -37,12 +40,11 @@ urlpatterns = [
 
     path('important', views.important, name='is_important'),
     path('export-files/', zipfile.export_files, name='export_files'),
-
+    # Important
     path('mark_important_folder/<int:folder_id>', important.mark_important_folder, name='mark_folder'),
     path('unmark_important_folder/<int:folder_id>', important.unmark_important_folder, name='unmark_folder'),
     path('mark_important_file/<int:file_id>', important.mark_important_file, name='mark_file'),
     path('unmark_important_file/<int:file_id>', important.unmark_important_file, name='unmark_file'),
-
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,
