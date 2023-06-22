@@ -4,6 +4,7 @@
     <div class="row">
         <div class="col-12">
             {% if folder %}
+
                 <a href="{% url 'create_folder' parent_folder_id=folder.id %}" class="btn btn-outline-secondary ">Create
                     Folder</a>
                 <a href="{% url 'upload_file' folder_id=folder.id %}" class="btn btn-outline-secondary">Upload
@@ -12,7 +13,7 @@
                 <a href="{% url 'create_folder_root' %}" class="btn btn-outline-secondary ">Create Folder</a>
                 <a href="{% url 'upload_file_root' %}" class="btn btn-outline-secondary">Upload Files</a>
             {% endif %}
-
+            <a href="{% url 'export_files' %}" class="btn btn-outline-secondary ">Export</a>
             <div class="btn-group" role="group" aria-label="View Switch">
                 <a href="{% url 'home' %}" class="btn btn-outline-secondary active">Table View</a>
                 <a href="{% url 'home-views' %}" class="btn btn-outline-secondary">Icon View</a>
