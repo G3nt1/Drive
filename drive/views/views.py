@@ -58,7 +58,6 @@ def trashItems(request):
 
 
 def important(request):
-
     important_files = Files.objects.filter(user=request.user, is_important=True)
     important_folders = Folder.objects.filter(user=request.user, is_important=True)
 
@@ -70,9 +69,8 @@ def important(request):
 
 
 # Search views
-@login_required(login_url='login')
 def search(request):
-    query = request.GET.get('q')
+    query = request.GET.get('query')
     if query:
         user = request.user
         results_folder = Folder.objects.filter(

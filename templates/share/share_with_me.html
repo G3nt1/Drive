@@ -1,26 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Shared Folders</h2>
-    <ul>
-        {% for folder in shared_folders %}
-            <a href="{% url 'open_shared_folder' folder.id %}">
-                {{ folder.folder.folder_name }}</a>
-            <li>{{ folder.user.email }}</li>
 
-        {% empty %}
-            <li>No shared folders</li>
-        {% endfor %}
-    </ul>
+    <div id="table-view">
+        <div class="row">
+            <div class="col-md-12 mt-2">
+                <table class="documents-table table table-striped table-hover table-bordered table-responsive">
+                    <thead>
+                    <tr class="text-strong">
+                        <th>Name</th>
+                        <th>User</th>
+                        <th>Last Modified</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for folder in shared_folders %}
+                        <tr>
+                            <td><a href="{% url 'open_shared_folder' folder.folder.id %}">
+                                <i class="ti ti-folder-filled text-warning"></i> {{ folder.folder.folder_name }}</a>
+                            </td>
+                            <td>{{ folder.folder.user.email }}</td>
+                            <td>{{ folder.folder.folder_date }}</td>
 
-    <h2>Shared Files</h2>
-    <ul>
-        {% for file in shared_files %}
-            <li>{{ file.file.file_name }}</li>
-            <li>{{ file.user.email }}</li>
+                        </tr>
+                    {% endfor %}
+                    {% for file in shared_files %}
+                        <tr>
+                            <td>
+                                <a href="#" onclick="openFile('{{ file.file.file_upload.url }}')">
+                                    <i class="ti ti-file text-success"></i> {{ file.file.file_name }}
+                                </a>
 
-        {% empty %}
-            <li>No shared files</li>
-        {% endfor %}
-    </ul>
+                            </td>
+                            <td>{{ file.file.user.email }}</td>
+                            <td>{{ file.file.upload_date }}</td>
+
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openFile(url) {
+            window.open(url, "_blank");
+        }
+    </script>
+
+
 {% endblock %}
