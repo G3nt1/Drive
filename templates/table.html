@@ -1,15 +1,20 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
-    <h2>Shared Folder: {{ folder.folder_name }}</h2>
+<div class="row">
+    <div class="col-12">
+        {% if folder %}
 
-    {% for file in folder.parent_folder.files.all %}
-        <h2>{{ file.file.file_name }}</h2>
-    {% empty %}
-        <h6>No files in the shared folder</h6>
-    {% endfor %}
+            <a href="{% url 'create_folder' parent_folder_id=folder.id %}" class="btn btn-outline-secondary ">Create
+                Folder</a>
+            <a href="{% url 'upload_file' folder_id=folder.id %}" class="btn btn-outline-secondary">Upload
+                Files </a>
+        {% else %}
+            <a href="{% url 'create_folder_root' %}" class="btn btn-outline-secondary ">Create Folder</a>
+            <a href="{% url 'upload_file_root' %}" class="btn btn-outline-secondary">Upload Files</a>
+        {% endif %}
+        <a href="{% url 'export_all_files' %}" class="btn btn-outline-secondary ">Export</a>
+    </div>
+</div>
 
-    <div id="table-view">
+<div id="table-view">
     <div class="row">
         <div class="col-md-12 mt-2">
             <table class="documents-table table table-striped table-hover table-bordered table-responsive">
@@ -22,9 +27,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for folder in folder.child_folders.all %}
+                {% for folder in folders %}
                     <tr>
-                        <td><a href="{% url 'open_shared_folder' folder.id %}">
+                        <td><a href="{% url 'folder' folder.id %}">
                             <i class="ti ti-folder-filled text-warning"></i> {{ folder.folder_name }}</a>
                         </td>
                         <td>{{ folder.folder_date }}</td>
@@ -35,29 +40,32 @@
                                     <a href="{% url 'update_folder' folder.id %}" class="me-2">
                                         <i class="ti ti-pencil" title="Rename"></i>
                                     </a>
-                                {% if folder.is_important %}
-                                    <a href="{% url 'unmark_folder' folder.id %}" class="me-2">
-                                        <i class="ti ti-star-filled text-warning" title="Important"></i>
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'mark_folder' folder.id %}" class="me-2">
-                                        <i class="ti ti-star" title="Important"></i>
-                                    </a>
-                                {% endif %}
-                                <div class="actions">
-                                    <a href="{% url 'delete_folder' folder.id %}">
-                                        <i class="ti ti-trash" title="Delete"></i>
-                                    </a>
-                                    <a href="{% url 'share_folder' folder.id %}" class="me-2">
-                                        <i class="ti ti-brand-stackshare" title="Share"></i>
-                                    </a>
+                                    {% if folder.is_important %}
+                                        <a href="{% url 'unmark_folder' folder.id %}" class="me-2">
+                                            <i class="ti ti-star-filled text-warning" title="Important"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'mark_folder' folder.id %}" class="me-2">
+                                            <i class="ti ti-star" title="Important"></i>
+                                        </a>
+                                    {% endif %}
+                                    <div class="actions">
+                                        <a href="{% url 'delete_folder' folder.id %}">
+                                            <i class="ti ti-trash" title="Delete"></i>
+                                        </a>
+                                        <a href="{% url 'share_folder' folder.id %}" class="me-2">
+                                            <i class="ti ti-brand-stackshare" title="Share"></i>
+                                        </a>
+                                        <a href="{% url 'export_files_by_id' folder.id %}" class="me-2">
+                                            <i class="ti ti-file-export" title="export"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                    </td>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
-                {% for file in folder.parent_folder.files.all %}
+                {% for file in files %}
                     <tr>
                         <td>
                             <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
@@ -90,7 +98,6 @@
                                             <i class="ti ti-brand-stackshare" title="Share"></i>
                                         </a>
                                     </div>
-                                </div>
                             </form>
                         </td>
 
@@ -105,5 +112,3 @@
             window.open(url, "_blank");
         }
     </script>
-
-{% endblock %}

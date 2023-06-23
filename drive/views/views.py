@@ -1,48 +1,30 @@
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
 
 from drive.models import Folder, Files
 
 
-@login_required(login_url='login')
 def home(request):
     if request.method == 'POST':
         view = request.POST.get('view', None)
-        important = request.POST.get('important', None)
-
         if view == 'table':
-            if important:
-                return redirect('home')
-            else:
-                return redirect('home-views')
+            return redirect('home/?view_mode=table')
 
         elif view == 'icon':
             if important:
-                return redirect('home-views')
-            else:
-                return redirect('home')
+                return redirect('home?view_mode=icons')
 
     top_level_folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
     files = Files.objects.filter(user=request.user, folder__isnull=True, is_deleted=False)
+
+    view_mode = request.GET.get('view_mode', 'table')  # Get the view_mode from the request query parameters
 
     return render(request, 'home.html', {
         'folders': top_level_folders,
         'parent_folder_id': None,
         'active_menu': 'home',
         'files': files,
-    })
-
-
-def homeView(request):
-    top_level_folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
-    files = Files.objects.filter(user=request.user, folder__isnull=True, is_deleted=False)
-
-    return render(request, 'home-view.html', {
-        'folders': top_level_folders,
-        'parent_folder_id': None,
-        'active_menu': 'home',
-        'files': files,
+        'view_mode': view_mode
     })
 
 
@@ -60,6 +42,13 @@ def trashItems(request):
 def important(request):
     important_files = Files.objects.filter(user=request.user, is_important=True)
     important_folders = Folder.objects.filter(user=request.user, is_important=True)
+    view = request.POST.get('view', None)
+    if view == 'table':
+        return redirect('is_important/?view_mode=table')
+
+    elif view == 'icon':
+        if important:
+            return redirect('is_important/?view_mode=icons')
 
     return render(request, 'home.html', {
         'files': important_files,

@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% load static %}
     <style>
         .container {
             margin: 10px;
@@ -24,22 +24,17 @@
                 <a href="{% url 'create_folder_root' %}" class="btn btn-outline-secondary ">Create Folder</a>
                 <a href="{% url 'upload_file_root' %}" class="btn btn-outline-secondary">Upload Files</a>
             {% endif %}
-            <a href="{% url 'export_files' %}" class="btn btn-outline-secondary ">Export</a>
-            <div class="btn-group" role="group" aria-label="View Switch">
-                <a href="{% url 'home' %}" class="btn btn-outline-secondary">Table View</a>
-
-                <a href="{% url 'home-views' %}" class="btn btn-outline-secondary active">Icon View</a>
-            </div>
+            <a href="{% url 'export_all_files' %}" class="btn btn-outline-secondary ">Export</a>
         </div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="d-flex flex-wrap">
-                    {% for folder in folders %}
-                        <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                            <div class="card" style="width: auto">
-                                <div class="card-body">
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex flex-wrap">
+                {% for folder in folders %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                        <div class="card" style="width: auto">
+                            <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between mb-2">
                                         <a href="{% url 'folder' folder.id %}" style="text-decoration: none">
                                             <i class="ti ti-folder-filled text-yellow" style="font-size: 100px;"></i>
@@ -71,16 +66,19 @@
                                                     <a href="{% url 'share_folder' folder.id %}" class="me-2">
                                                         <i class="ti ti-brand-stackshare" title="Share"></i>
                                                     </a>
+                                                    <a href="{% url 'export_files_by_id' folder.id %}" class="me-2">
+                                                        <i class="ti ti-file-export" title="export"></i>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
-                                </div>
-                                <div class="card-text-wrapper">
-                                    <div class="menu">
-                                        <div class="menu-options">
-                                            <!-- Add your menu options here -->
-                                        </div>
+                            </div>
+                            <div class="card-text-wrapper">
+                                <div class="menu">
+                                    <div class="menu-options">
+                                        <!-- Add your menu options here -->
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -184,4 +182,3 @@
             window.open(url, "_blank");
         }
     </script>
-{% endblock %}

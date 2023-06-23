@@ -6,8 +6,7 @@ from drive.views import trashViews, fileFolderViews, authViews, views, zipfile, 
 
 urlpatterns = [
     path('', views.home, name='home'),
-    # big views
-    path('home/', views.homeView, name='home-views'),
+
     # # Trash
     path('trash/', views.trashItems, name='trash_list'),
     path('delete_folder/<int:folder_id>/', trashViews.delete_folder, name='delete_folder'),
@@ -39,7 +38,10 @@ urlpatterns = [
     path('search', views.search, name='search'),
 
     path('important', views.important, name='is_important'),
-    path('export-files/', zipfile.export_files, name='export_files'),
+    path('export-all-files/', zipfile.export_all_files, name='export_all_files'),
+
+    # Export by folder ID
+    path('export-files/<int:folder_id>/', zipfile.export_files_by_id, name='export_files_by_id'),
     # Important
     path('mark_important_folder/<int:folder_id>', important.mark_important_folder, name='mark_folder'),
     path('unmark_important_folder/<int:folder_id>', important.unmark_important_folder, name='unmark_folder'),

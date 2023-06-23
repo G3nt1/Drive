@@ -6,6 +6,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>EN Drive</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    <script src="script.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta19/dist/css/tabler.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
@@ -23,6 +25,7 @@
                 <a href=".">
                     MyDrive
                 </a>
+
             </h1>
             <div class="navbar-nav flex-row d-lg-none">
                 <div class="nav-item d-none d-lg-flex me-3">
@@ -262,12 +265,15 @@
                         </a>
                     {% endif %}
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        {% if view_mode == 'table' %}
+                            <a href="{% url 'home' %}?view_mode=icons" class="dropdown-item">Icon Views</a>
+                        {% else %}
+                            <a href="{% url 'home' %}?view_mode=table" class="dropdown-item">Table Views</a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
                         <a href="{% url 'user_logout' %}" class="dropdown-item">Logout</a>
-                        {#                        <a href="./profile.html" class="dropdown-item">Profile</a>#}
-                        {#                        <a href="#" class="dropdown-item">Feedback</a>#}
-                        {#                        <div class="dropdown-divider"></div>#}
-                        {#                        <a href="./settings.html" class="dropdown-item">Settings</a>#}
-                        {#                        <a href="./sign-in.html" class="dropdown-item">Logout</a>#}
+                        {#                                                <a href="./settings.html" class="dropdown-item">Settings</a>#}
+                        {#                                                <a href="./sign-in.html" class="dropdown-item">Logout</a>#}
                     </div>
                 </div>
             </div>
@@ -294,7 +300,11 @@
     <div class="page-wrapper">
         <div class="page-body">
             <div class="container-xl">
-                {% block content %} {% endblock %}
+                {% block content %}
+
+                    <aside class="navbar navbar-vertical navbar-expand-md print-none" data-bs-theme="dark">
+
+                {% endblock %}
             </div>
         </div>
     </div>
