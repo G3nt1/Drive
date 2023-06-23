@@ -4,6 +4,9 @@
 {% block content %}
     {% if view_mode == 'icons' %}
         {% include 'icons.html' %}
+        {% if trashItems %}
+
+        {% endif %}
     {% else %}
         {% include 'table.html' %}
     {% endif %}

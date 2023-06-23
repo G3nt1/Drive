@@ -46,13 +46,6 @@ def trashItems(request):
 def important(request):
     important_files = Files.objects.filter(user=request.user, is_important=True)
     important_folders = Folder.objects.filter(user=request.user, is_important=True)
-    # view = request.session.get('view_mode', 'table')
-    # if view == 'table':
-    #     return redirect('is_important')
-    #
-    # elif view == 'icon':
-    #     if important:
-    #         return redirect('is_important')
 
     return render(request, 'home.html', {
         'files': important_files,

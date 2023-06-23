@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
 </head>
+<body class="container-fluid" data-bs-theme="{% if dark_mode %}dark{% else %}light{% endif %}">
 
-<body class="container-fluid" data-bs-theme="dark">
 
 <div class="page">
     <!-- Sidebar -->
@@ -253,10 +253,6 @@
     </aside>
     <header class="navbar navbar-expand-md d-none d-lg-flex d-print-none">
         <div class="container-xl">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
-                    aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="navbar-nav flex-row order-md-last">
                 <div class="nav-item dropdown">
                     {% if user.is_authenticated %}
@@ -273,15 +269,16 @@
                         {% endif %}
 
                         <div class="theme-options">
-                            <button class="container-fluid-light"><i class="ti ti-sun-high"></i></button>
-                            <button class="container-fluid-dark"><i class="ti ti-moon"></i></button>
+                            <button class="container-fluid-light" onclick="setTheme('light')"><i
+                                    class="ti ti-sun-high"></i></button>
+                            <button class="container-fluid-dark" onclick="setTheme('dark')"><i class="ti ti-moon"></i>
+                            </button>
                         </div>
                         <div class="dropdown-divider"></div>
                         <a href="{% url 'user_logout' %}" class="dropdown-item">Logout</a>
                         {#                                                <a href="./settings.html" class="dropdown-item">Settings</a>#}
                         {#                                                <a href="./sign-in.html" class="dropdown-item">Logout</a>#}
                     </div>
-                    `
                 </div>
             </div>
             <div class="collapse navbar-collapse" id="navbar-menu">
@@ -314,6 +311,16 @@
         </div>
     </div>
 </div>
+<script>
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.body.setAttribute('data-bs-theme', 'dark');
+        } else if (theme === 'light') {
+            document.body.setAttribute('data-bs-theme', 'light');
+        }
+    }
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta19/dist/js/tabler.min.js"></script>
 </body>
 </html>
