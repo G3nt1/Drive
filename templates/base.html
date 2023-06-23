@@ -7,15 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>EN Drive</title>
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
-    <script src="script.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta19/dist/css/tabler.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
 </head>
-<body>
+
+<body class="container-fluid" data-bs-theme="dark">
+
 <div class="page">
     <!-- Sidebar -->
-    <aside class="navbar navbar-vertical navbar-expand-md print-none" data-bs-theme="dark">
+    <aside class="navbar navbar-vertical navbar-expand-md print-none">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu"
                     aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
@@ -270,11 +271,17 @@
                         {% else %}
                             <a href="{% url 'home' %}?view_mode=table" class="dropdown-item">Table Views</a>
                         {% endif %}
+
+                        <div class="theme-options">
+                            <button class="container-fluid-light"><i class="ti ti-sun-high"></i></button>
+                            <button class="container-fluid-dark"><i class="ti ti-moon"></i></button>
+                        </div>
                         <div class="dropdown-divider"></div>
                         <a href="{% url 'user_logout' %}" class="dropdown-item">Logout</a>
                         {#                                                <a href="./settings.html" class="dropdown-item">Settings</a>#}
                         {#                                                <a href="./sign-in.html" class="dropdown-item">Logout</a>#}
                     </div>
+                    `
                 </div>
             </div>
             <div class="collapse navbar-collapse" id="navbar-menu">
@@ -301,8 +308,6 @@
         <div class="page-body">
             <div class="container-xl">
                 {% block content %}
-
-                    <aside class="navbar navbar-vertical navbar-expand-md print-none" data-bs-theme="dark">
 
                 {% endblock %}
             </div>

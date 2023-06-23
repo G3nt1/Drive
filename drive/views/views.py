@@ -6,18 +6,22 @@ from drive.models import Folder, Files
 
 def home(request):
     if request.method == 'POST':
-        view = request.POST.get('view', None)
+        view = request.POST.get('view_mode', None)
         if view == 'table':
-            return redirect('home/?view_mode=table')
-
+            request.session['view_mode'] = 'table'
+            return redirect('home')
         elif view == 'icon':
-            if important:
-                return redirect('home?view_mode=icons')
+            request.session['view_mode'] = 'icon'
+            return redirect('home')
 
     top_level_folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
     files = Files.objects.filter(user=request.user, folder__isnull=True, is_deleted=False)
 
-    view_mode = request.GET.get('view_mode', 'table')  # Get the view_mode from the request query parameters
+    view_mode = request.GET.get('view_mode', 'table')
+
+    if request.user.is_authenticated:
+        # Save the session
+        request.session.save()
 
     return render(request, 'home.html', {
         'folders': top_level_folders,
@@ -42,13 +46,13 @@ def trashItems(request):
 def important(request):
     important_files = Files.objects.filter(user=request.user, is_important=True)
     important_folders = Folder.objects.filter(user=request.user, is_important=True)
-    view = request.POST.get('view', None)
-    if view == 'table':
-        return redirect('is_important/?view_mode=table')
-
-    elif view == 'icon':
-        if important:
-            return redirect('is_important/?view_mode=icons')
+    # view = request.session.get('view_mode', 'table')
+    # if view == 'table':
+    #     return redirect('is_important')
+    #
+    # elif view == 'icon':
+    #     if important:
+    #         return redirect('is_important')
 
     return render(request, 'home.html', {
         'files': important_files,

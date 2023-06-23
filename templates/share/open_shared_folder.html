@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <h2>Shared Folder: {{ folder.folder_name }}</h2>
+
 
     {% for file in folder.parent_folder.files.all %}
         <h2>{{ file.file.file_name }}</h2>
     {% empty %}
-        <h6>No files in the shared folder</h6>
+
     {% endfor %}
 
     <div id="table-view">
