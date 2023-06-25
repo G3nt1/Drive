@@ -36,6 +36,12 @@ def share_with_me(request):
 
 
 @login_required
-def open_shared_folder(request, folder_id):
-    shared_folder = get_object_or_404(Folder, id=folder_id, is_deleted=False)
-    return render(request, 'share/open_shared_folder.html', {'folder': shared_folder})
+def open_shared(request, pk):
+    shared_item = get_object_or_404(Shared, id=pk)
+
+    if isinstance(shared_item.folder, Folder):
+        return render(request, 'share/open_shared.html', {'folder': shared_item.folder})
+    elif isinstance(shared_item.file, Files):
+        return render(request, 'share/open_shared.html', {'file': shared_item.file})
+
+    return redirect('share_with_me')

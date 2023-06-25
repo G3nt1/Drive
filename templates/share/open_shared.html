@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div id="table-view">
+        <div class="row">
+            <div class="col-md-12 mt-2">
+                <table class="documents-table table table-striped table-hover table-bordered table-responsive">
+                    <thead>
+                    <tr class="text-strong">
+                        <th>Name</th>
+                        <th>User</th>
+                        <th>Last Modified</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <a href="{% url 'open_shared' folder.pk %}">
+                                <i class="ti ti-folder-filled text-warning"></i> {{ folder.folder_name }}
+                            </a>
+                        </td>
+                        <td>{{ folder.user.email }}</td>
+                        <td>{{ folder.folder_date }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                <i class="ti ti-file text-success"></i> {{ file.file_name }}
+                            </a>
+                        </td>
+                        <td>{{ file.user.email }}</td>
+                        <td>{{ file.upload_date }}</td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openFile(url) {
+            window.open(url, "_blank");
+        }
+    </script>
+
+{% endblock %}

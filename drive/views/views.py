@@ -1,8 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.urls import reverse
 
 from drive.models import Folder, Files, UserPreference
 
@@ -32,7 +30,8 @@ def home(request):
         'parent_folder_id': None,
         'active_menu': 'home',
         'files': files,
-        'view_mode': view_mode
+        'view_mode': view_mode,
+        'dark_mode': True
     })
 
 
@@ -92,31 +91,5 @@ def user_preference(request):
 
 
 def save_preference(request):
-    if request.method == 'POST':
-        user = request.user
-        view_mode = request.POST.get('view_mode')
-        theme_mode = request.POST.get('theme_mode')
-
-        print(f"view_mode: {view_mode}")
-        print(f"theme_mode: {theme_mode}")
-
-        # Save the preferences for the current user
-        preferences, created = UserPreference.objects.get_or_create(user=user)
-        preferences.view_mode = view_mode
-        preferences.theme_mode = theme_mode
-        preferences.save()
-
-        if theme_mode == 'dark':
-            request.session['theme_mode'] = 'dark'
-            request.session.pop('light_mode', None)  # Remove light_mode session if exists
-        elif theme_mode == 'light':
-            request.session['theme_mode'] = 'light'
-            request.session.pop('dark_mode', None)  # Remove dark_mode session if exists
-
-        # Redirect to the appropriate URL based on view_mode
-        if view_mode == 'icon':
-            return HttpResponseRedirect(reverse('home') + '?view_mode=icons')
-        elif view_mode == 'table':
-            return HttpResponseRedirect(reverse('home') + '?view_mode=table')
-
+    pass
     return redirect('home')
