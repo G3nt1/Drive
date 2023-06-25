@@ -269,10 +269,11 @@
                         {% endif %}
 
                         <div class="theme-options">
-                            <button class="container-fluid-light" onclick="setTheme('light')"><i
-                                    class="ti ti-sun-high"></i></button>
-                            <button class="container-fluid-dark" onclick="setTheme('dark')"><i class="ti ti-moon"></i>
-                            </button>
+                            <a class="container-fluid-light" onclick="setTheme('light')"><i
+                                    class="ti ti-sun-high text-yellow"></i></a>
+                            <a class="container-fluid-dark" onclick="setTheme('dark')"><i
+                                    class="ti ti-moon text-red"></i>
+                            </a>
                         </div>
                         <div class="dropdown-divider"></div>
                         <a href="{% url 'user_logout' %}" class="dropdown-item">Logout</a>

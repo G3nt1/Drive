@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
 
 from drive.models import Folder, Files
 
 
+@login_required
 def home(request):
     if request.method == 'POST':
         view = request.POST.get('view_mode', None)
@@ -14,7 +16,7 @@ def home(request):
             request.session['view_mode'] = 'icon'
             return redirect('home')
 
-    top_level_folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
+    folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
     files = Files.objects.filter(user=request.user, folder__isnull=True, is_deleted=False)
 
     view_mode = request.GET.get('view_mode', 'table')
@@ -24,7 +26,7 @@ def home(request):
         request.session.save()
 
     return render(request, 'home.html', {
-        'folders': top_level_folders,
+        'folders': folders,
         'parent_folder_id': None,
         'active_menu': 'home',
         'files': files,

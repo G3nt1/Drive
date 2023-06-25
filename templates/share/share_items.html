@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Share Folder "{{ folder.folder_name }}"</h2>
+    <h2>Shared Items"{{ folder.folder_name }} {{ file.file_name }}"</h2>
     <form method="POST">
         {% csrf_token %}
         <div class="form-group">
