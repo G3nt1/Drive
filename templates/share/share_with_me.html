@@ -17,7 +17,7 @@
                     {% for folder in shared_folders %}
                         <tr>
                             <td>
-                                <a href="{% url 'share_with_me' %}">
+                                <a href="{% url 'open_shared_folder' folder.id %}">
                                     <i class="ti ti-folder-filled text-warning"></i> {{ folder.folder.folder_name }}
                                 </a>
                             </td>

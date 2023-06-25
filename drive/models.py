@@ -46,9 +46,9 @@ class Shared(models.Model):
 
 
 class UserPreference(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, default='dark')
-    view_mode = models.BooleanField(default=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    view_mode = models.CharField(max_length=10)
+    theme_mode = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return f"Preferences for {self.user.username}"

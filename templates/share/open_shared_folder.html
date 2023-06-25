@@ -22,7 +22,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for folder in folder.child_folders.all %}
+                {% for folder in folder.parent_folder_id %}
                     <tr>
                         <td><a href="{% url 'open_shared_folder' folder.id %}">
                             <i class="ti ti-folder-filled text-warning"></i> {{ folder.folder_name }}</a>

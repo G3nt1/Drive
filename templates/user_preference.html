@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3>User Preferences</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{% url 'save_preference' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="view-mode">View Mode:</label>
+                        <select class="form-control" id="view-mode" name="view_mode">
+                            <option value="table" {% if view_mode == 'table' %}selected{% endif %}>Table</option>
+                            <option value="icon" {% if view_mode == 'icon' %}selected{% endif %}>Icon</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="theme-mode">Theme Mode:</label>
+                        <select class="form-control" id="theme-mode" name="theme_mode">
+                            <option class="container-fluid-dark" onclick="setTheme('dark')" value="dark"
+                                    {% if theme_mode == 'dark' %}selected{% endif %}>Dark
+                            </option>
+                            <option class="container-fluid-light" onclick="setTheme('light')" value="light"
+                                    {% if theme_mode == 'light' %}selected{% endif %}>Light
+                            </option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Preferences</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
