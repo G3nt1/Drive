@@ -17,11 +17,11 @@
                     {% for folder in shared_folders %}
                         <tr>
                             <td>
-                                <a href="{% url 'share_with_me' folder.folder.pk %}">
+                                <a href="{% url 'share_with_me' %}">
                                     <i class="ti ti-folder-filled text-warning"></i> {{ folder.folder.folder_name }}
                                 </a>
                             </td>
-                            <td>{{ folder.user.email }}</td>
+                            <td>{{ folder.folder.user.email }}</td>
                             <td>{{ folder.folder.folder_date }}</td>
                         </tr>
                     {% endfor %}
@@ -32,7 +32,7 @@
                                     <i class="ti ti-file text-success"></i> {{ file.file.file_name }}
                                 </a>
                             </td>
-                            <td>{{ file.user.email }}</td>
+                            <td>{{ file.file.user.email }}</td>
                             <td>{{ file.file.upload_date }}</td>
                         </tr>
                     {% endfor %}

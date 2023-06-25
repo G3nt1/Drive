@@ -75,3 +75,4 @@ def search(request):
         'search_term': query,
         'files': results_files
     })
+

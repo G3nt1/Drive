@@ -8,8 +8,8 @@ from drive.models import Folder, Files, Shared
 
 @login_required
 def shared(request, pk):
-    folder = get_object_or_404(Folder, id=pk)
-    file = get_object_or_404(Files, id=pk)
+    folder = get_object_or_404(Folder, id=pk, user=request.user)
+    file = get_object_or_404(Files, id=pk, user=request.user)
 
     if request.method == 'POST':
         form = SharedForm(request.POST)
@@ -51,8 +51,8 @@ def shared(request, pk):
 #
 #
 def share_with_me(request):
-    shared_folders = Shared.objects.filter(folder__isnull=False)
-    shared_files = Shared.objects.filter(file__isnull=False)
+    shared_folders = Shared.objects.filter(folder__isnull=False, user=request.user)
+    shared_files = Shared.objects.filter(file__isnull=False, user=request.user)
 
     return render(request, 'share/share_with_me.html', {'shared_folders': shared_folders, 'shared_files': shared_files})
 #
