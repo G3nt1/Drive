@@ -9,7 +9,6 @@ from drive.models import Folder, Files, UserPreference
 def get_theme_mode(request):
     user_preference = get_object_or_404(UserPreference, user=request.user)
     theme_mode = user_preference.theme_mode
-    print(theme_mode)
     return theme_mode
 
 
@@ -48,7 +47,7 @@ def trashItems(request):
     folders = Folder.objects.filter(user=request.user, is_deleted=True)
     files = Files.objects.filter(user=request.user, is_deleted=True)
 
-    return render(request, 'home.html', {
+    return render(request, 'trash/trash_list.html', {
         'folders': folders,
         'files': files,
         'active_menu': 'trash',
