@@ -1,25 +1,31 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
+from drive.forms import UserPreForm
 from drive.models import Folder, Files, UserPreference
+
+
+def get_theme_mode(request):
+    user_preference = get_object_or_404(UserPreference, user=request.user)
+    theme_mode = user_preference.theme_mode
+    print(theme_mode)
+    return theme_mode
+
+
+def get_view_mode(request):
+    user_preference = get_object_or_404(UserPreference, user=request.user)
+    view_mode = user_preference.view_mode
+    return view_mode
 
 
 @login_required
 def home(request):
-    if request.method == 'POST':
-        view = request.POST.get('view_mode', None)
-        if view == 'table':
-            request.session['view_mode'] = 'table'
-            return redirect('home')
-        elif view == 'icon':
-            request.session['view_mode'] = 'icon'
-            return redirect('home')
+    theme_mode = get_theme_mode(request)
+    view_mode = get_view_mode(request)
 
     folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
     files = Files.objects.filter(user=request.user, folder__isnull=True, is_deleted=False)
-
-    view_mode = request.GET.get('view_mode', 'table')
 
     if request.user.is_authenticated:
         # Save the session
@@ -30,35 +36,47 @@ def home(request):
         'parent_folder_id': None,
         'active_menu': 'home',
         'files': files,
-        'view_mode': view_mode,
-        'dark_mode': True
+        'theme_mode': theme_mode,
+        'view_mode': view_mode
     })
 
 
 def trashItems(request):
+    theme_mode = get_theme_mode(request)
+    view_mode = get_view_mode(request)
+
     folders = Folder.objects.filter(user=request.user, is_deleted=True)
     files = Files.objects.filter(user=request.user, is_deleted=True)
 
-    return render(request, 'trash/trash_list.html', {
+    return render(request, 'home.html', {
         'folders': folders,
         'files': files,
-        'active_menu': 'trash'
+        'active_menu': 'trash',
+        'theme_mode': theme_mode,
+        'view_mode': view_mode
     })
 
 
 def important(request):
+    theme_mode = get_theme_mode(request)
+    view_mode = get_view_mode(request)
+
     important_files = Files.objects.filter(user=request.user, is_important=True)
     important_folders = Folder.objects.filter(user=request.user, is_important=True)
 
     return render(request, 'home.html', {
         'files': important_files,
         'folders': important_folders,
-        'active_menu': 'important'
+        'active_menu': 'important',
+        'theme_mode': theme_mode,
+        'view_mode': view_mode
     })
 
 
 # Search views
 def search(request):
+    theme_mode = get_theme_mode(request)
+    view_mode = get_view_mode(request)
     query = request.GET.get('query')
     if query:
         user = request.user
@@ -74,22 +92,29 @@ def search(request):
     return render(request, 'home.html', {
         'folders': results_folder,
         'search_term': query,
-        'files': results_files
+        'files': results_files,
+        'theme_mode': theme_mode,
+        'view_mode': view_mode
     })
 
 
 def user_preference(request):
-    user = request.user
-    preferences, created = UserPreference.objects.get_or_create(user=user)
-    view_mode = preferences.view_mode
-    theme_mode = preferences.theme_mode
+    theme_mode = get_theme_mode(request)
+    view_mode = get_view_mode(request)
+    user_preference = get_object_or_404(UserPreference, user=request.user)
 
-    return render(request, 'user_preference.html', {
-        'view_mode': view_mode,
-        'theme_mode': theme_mode,
-    })
+    if request.method == 'POST':
+        form = UserPreForm(request.POST, instance=user_preference)
+        if form.is_valid():
+            user_preference = form.save(commit=False)
+            theme_mode = request.POST.get('theme_mode', 'light')
+            user_preference.theme_mode = theme_mode
+            user_preference.save()
+            return redirect('home')
+    else:
+        form = UserPreForm(instance=user_preference)
 
-
-def save_preference(request):
-    pass
-    return redirect('home')
+    return render(request, 'user_preference.html', {'form': form,
+                                                    'theme_mode': theme_mode,
+                                                    'view_mode': view_mode
+                                                    })

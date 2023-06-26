@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Folder, Files
+from .models import Folder, Files, UserPreference
 
 
 class RegistrationForm(UserCreationForm):
@@ -47,12 +47,12 @@ class SharedForm(forms.Form):
             'user': 'Select User',
         }
 
-# class ShareFileForm(forms.Form):
-#     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-#
-#     class Meta:
-#         fields = ['user']  # Specify the order of fields, if desired
-#         labels = {
-#             'user': 'Select User',  # Custom label for the 'user' field
-#         }
-#         # Add any other desired options
+
+class UserPreForm(forms.ModelForm):
+    class Meta:
+        model = UserPreference
+        fields = ('view_mode', 'theme_mode',)
+        widgets = {
+            'view_mode': forms.RadioSelect(attrs={'class': 'view-mode-radio'}),
+            'theme_mode': forms.RadioSelect(attrs={'class': 'theme-mode-radio'}),
+        }

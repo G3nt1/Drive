@@ -46,9 +46,18 @@ class Shared(models.Model):
 
 
 class UserPreference(models.Model):
+    VIEW_MODE_CHOICES = (
+        ('icon', 'Icon View'),
+        ('table', 'Table View'),
+    )
+    THEME_MODE_CHOICES = (
+        ('light', 'Light Mode'),
+        ('dark', 'Dark Mode'),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    view_mode = models.CharField(max_length=10)
-    theme_mode = models.CharField(max_length=10, null=True, blank=True)
+    view_mode = models.CharField(max_length=10, choices=VIEW_MODE_CHOICES)
+    theme_mode = models.CharField(max_length=10, choices=THEME_MODE_CHOICES, null=True, blank=True)
 
     def __str__(self):
         return f"Preferences for {self.user.username}"

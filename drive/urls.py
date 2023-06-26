@@ -54,7 +54,7 @@ urlpatterns = [
     path('open_shared/<int:pk>/', share.open_shared, name='open_shared'),
 
     path('user_preference/', views.user_preference, name='user_preference'),
-    path('save_preference/', views.save_preference, name='save_preference'),
+    # path('save_preference/', views.save_preference, name='save_preference'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,

@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="{% static 'style.css' %}"/>
 </head>
-<body class="container-fluid" data-bs-theme="{% if dark_mode %}dark{% else %}light{% endif %}">
-
+<body class="container-fluid" data-bs-theme="{% if theme_mode == 'dark' %}dark{% else %}light{% endif %}">
 
 <div class="page">
     <!-- Sidebar -->
@@ -262,19 +261,6 @@
                         </a>
                     {% endif %}
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        {% if view_mode == 'table' %}
-                            <a href="{% url 'home' %}?view_mode=icons" class="dropdown-item">Icon Views</a>
-                        {% else %}
-                            <a href="{% url 'home' %}?view_mode=table" class="dropdown-item">Table Views</a>
-                        {% endif %}
-
-                        <div class="theme-options">
-                            <a class="container-fluid-light" onclick="setTheme('light')"><i
-                                    class="ti ti-sun-high text-yellow"></i></a>
-                            <a class="container-fluid-dark" onclick="setTheme('dark')"><i
-                                    class="ti ti-moon text-red"></i>
-                            </a>
-                        </div>
                         <div class="dropdown-divider"></div>
                         <a href="{% url 'user_logout' %}" class="dropdown-item">Logout</a>
                         <a href="{% url 'user_preference' %}" class="dropdown-item">User Preference</a>
