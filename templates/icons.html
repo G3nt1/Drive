@@ -63,7 +63,7 @@
                                                 <a href="{% url 'delete_folder' folder.id %}">
                                                     <i class="ti ti-trash" title="Delete"></i>
                                                 </a>
-                                                <a href="{% url 'shared_items' folder.pk %}" class="me-2">
+                                                <a href="{% url 'shared_folder' folder.id %}" class="me-2">
                                                     <i class="ti ti-brand-stackshare" title="Share"></i>
                                                 </a>
 
@@ -159,7 +159,7 @@
                                                 <a href="{% url 'delete_file' file.id %}">
                                                     <i class="ti ti-trash" title="Delete"></i>
                                                 </a>
-                                                <a href="{% url 'shared_items' file.pk %}" class="me-2">
+                                                <a href="{% url 'shared_file' file.id %}" class="me-2">
                                                     <i class="ti ti-brand-stackshare" title="Share"></i>
                                                 </a>
 

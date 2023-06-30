@@ -7,22 +7,26 @@ from drive.models import Folder, Files, UserPreference
 
 
 def get_theme_mode(request):
-    user_preference = get_object_or_404(UserPreference, user=request.user)
-    theme_mode = user_preference.theme_mode
-    return theme_mode
+    if request.user.is_authenticated:
+        user_preference = get_object_or_404(UserPreference, user=request.user)
+        theme_mode = user_preference.theme_mode
+    else:
+        # Handle the case when the user is not authenticated
+        theme_mode = None  # or any default value you prefer
+    return {'theme_mode': theme_mode}
 
 
 def get_view_mode(request):
-    user_preference = get_object_or_404(UserPreference, user=request.user)
-    view_mode = user_preference.view_mode
-    return view_mode
+    if request.user.is_authenticated:
+        user_preference = get_object_or_404(UserPreference, user=request.user)
+        view_mode = user_preference.view_mode
+    else:
+        view_mode = None
+    return {'view_mode': view_mode}
 
 
 @login_required
 def home(request):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
-
     folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)
     files = Files.objects.filter(user=request.user, folder__isnull=True, is_deleted=False)
 
@@ -35,15 +39,11 @@ def home(request):
         'parent_folder_id': None,
         'active_menu': 'home',
         'files': files,
-        'theme_mode': theme_mode,
-        'view_mode': view_mode
+
     })
 
 
 def trashItems(request):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
-
     folders = Folder.objects.filter(user=request.user, is_deleted=True)
     files = Files.objects.filter(user=request.user, is_deleted=True)
 
@@ -51,15 +51,10 @@ def trashItems(request):
         'folders': folders,
         'files': files,
         'active_menu': 'trash',
-        'theme_mode': theme_mode,
-        'view_mode': view_mode
     })
 
 
 def important(request):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
-
     important_files = Files.objects.filter(user=request.user, is_important=True)
     important_folders = Folder.objects.filter(user=request.user, is_important=True)
 
@@ -67,15 +62,11 @@ def important(request):
         'files': important_files,
         'folders': important_folders,
         'active_menu': 'important',
-        'theme_mode': theme_mode,
-        'view_mode': view_mode
     })
 
 
 # Search views
 def search(request):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
     query = request.GET.get('query')
     if query:
         user = request.user
@@ -92,14 +83,11 @@ def search(request):
         'folders': results_folder,
         'search_term': query,
         'files': results_files,
-        'theme_mode': theme_mode,
-        'view_mode': view_mode
+
     })
 
 
 def user_preference(request):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
     user_preference = get_object_or_404(UserPreference, user=request.user)
 
     if request.method == 'POST':
@@ -114,6 +102,5 @@ def user_preference(request):
         form = UserPreForm(instance=user_preference)
 
     return render(request, 'user_preference.html', {'form': form,
-                                                    'theme_mode': theme_mode,
-                                                    'view_mode': view_mode
+
                                                     })

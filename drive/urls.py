@@ -50,7 +50,8 @@ urlpatterns = [
     path('unmark_important_file/<int:file_id>', important.unmark_important_file, name='unmark_file'),
 
     path('share_with_me/', share.share_with_me, name='share_with_me'),
-    path('share_items/<int:pk>/', share.shared, name='shared_items'),
+    path('share_folder/<int:folder_id>/', share.share_folder, name='shared_folder'),
+    path('share_file/<int:file_id>/', share.share_file, name='shared_file'),
     path('open_shared/<int:pk>/', share.open_shared, name='open_shared'),
 
     path('user_preference/', views.user_preference, name='user_preference'),

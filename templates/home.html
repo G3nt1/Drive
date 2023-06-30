@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+    {% if theme_mode == 'dark' %}dark{% else %}light{% endif %}
     {% if view_mode == 'icon' %}
         {% include 'icons.html' %}
     {% else %}

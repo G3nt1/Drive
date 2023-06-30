@@ -4,24 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from drive.forms import FolderForm, FileUploadForm, FileUpdateForm
-from drive.models import Folder, Files, UserPreference
-
-
-def get_theme_mode(request):
-    user_preference = get_object_or_404(UserPreference, user=request.user)
-    theme_mode = user_preference.theme_mode
-    return theme_mode
-
-
-def get_view_mode(request):
-    user_preference = get_object_or_404(UserPreference, user=request.user)
-    view_mode = user_preference.view_mode
-    return view_mode
+from drive.models import Folder, Files
 
 
 def folder(request, folder_id):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
     parent_folder = get_object_or_404(Folder, pk=folder_id, user=request.user)
     child_folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=folder_id)
     files = Files.objects.filter(user=request.user, folder=parent_folder, is_deleted=False)
@@ -29,8 +15,7 @@ def folder(request, folder_id):
         'folders': child_folders,
         'folder': parent_folder,
         'files': files,
-        'theme_mode': theme_mode,
-        'view_mode': view_mode})
+    })
 
 
 def files(request, file_id):
@@ -44,8 +29,6 @@ def files(request, file_id):
 
 @login_required(login_url='login')
 def create_folder(request, parent_folder_id=None):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
     if request.method == 'POST':
         form = FolderForm(request.POST)
         if form.is_valid():
@@ -62,13 +45,10 @@ def create_folder(request, parent_folder_id=None):
         form = FolderForm()
 
     return render(request, 'folder/create-new-folder.html', {'form': form,
-                                                             'theme_mode': theme_mode,
-                                                             'view_mode': view_mode})
+                                                             })
 
 
 def update_folder(request, folder_id):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
     folders = Folder.objects.get(id=folder_id, user=request.user)
     if request.method == "POST":
         form = FolderForm(request.POST, instance=folders)
@@ -78,13 +58,11 @@ def update_folder(request, folder_id):
     else:
         form = FolderForm(instance=folders)
     return render(request, 'folder/update_folder.html', {'form': form,
-                                                         'theme_mode': theme_mode,
-                                                         'view_mode': view_mode})
+                                                         })
 
 
 def upload_file(request, folder_id=None):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
+
     if request.method == 'POST':
         files = request.FILES.getlist('file_upload')  # Get the list of uploaded files
 
@@ -105,13 +83,10 @@ def upload_file(request, folder_id=None):
         form = FileUploadForm()
 
     return render(request, 'files/upload-file.html', {'form': form,
-                                                      'theme_mode': theme_mode,
-                                                      'view_mode': view_mode})
+                                                      })
 
 
 def rename_files(request, file_id):
-    theme_mode = get_theme_mode(request)
-    view_mode = get_view_mode(request)
     files = Files.objects.get(id=file_id, user=request.user)
 
     if request.method == "POST":
@@ -124,5 +99,4 @@ def rename_files(request, file_id):
         form = FileUpdateForm(instance=files)
 
     return render(request, 'files/update-file.html', {'form': form, 'files': files, 'file_id': file_id,
-                                                      'theme_mode': theme_mode,
-                                                      'view_mode': view_mode})
+                                                      })
