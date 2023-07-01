@@ -32,8 +32,8 @@ urlpatterns = [
     # Authenticated
 
     path('register/', authViews.register, name='register'),
-    path('login/', authViews.user_login, name='user_login'),
-    path('logout/', authViews.user_logout, name='user_logout'),
+    path('login/', authViews.user_login, name='login'),
+    path('logout/', authViews.user_logout, name='logout'),
 
     # Search
     path('search', views.search, name='search'),
@@ -52,7 +52,9 @@ urlpatterns = [
     path('share_with_me/', share.share_with_me, name='share_with_me'),
     path('share_folder/<int:folder_id>/', share.share_folder, name='shared_folder'),
     path('share_file/<int:file_id>/', share.share_file, name='shared_file'),
-    path('open_shared/<int:pk>/', share.open_shared, name='open_shared'),
+    path('open_folder/<int:shared_id>/', share.open_folder, name='open_folder'),
+
+    # path('open_files/<int:file_id>/', share.open_file, name='open_file'),
 
     path('user_preference/', views.user_preference, name='user_preference'),
     # path('save_preference/', views.save_preference, name='save_preference'),

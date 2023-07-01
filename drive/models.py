@@ -16,6 +16,10 @@ class Folder(models.Model):
     def __str__(self):
         return self.folder_name
 
+    class Meta:
+        verbose_name_plural = 'Folders'
+        ordering = ['folder_date']
+
 
 class Files(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -27,6 +31,10 @@ class Files(models.Model):
     is_important = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     shared_with = models.ManyToManyField(User, through='Shared', related_name='shared_files')
+
+    class Meta:
+        verbose_name_plural = 'Files'
+        ordering = ['upload_date']
 
 
 class Shared(models.Model):
@@ -43,6 +51,10 @@ class Shared(models.Model):
             return f"{self.user.username} shared {self.file.file_name}"
         else:
             return f"{self.user.username} shared item"
+
+    class Meta:
+        verbose_name_plural = 'Shared Items'
+        ordering = ['shared_date']
 
 
 class UserPreference(models.Model):

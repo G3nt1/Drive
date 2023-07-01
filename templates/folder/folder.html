@@ -1,183 +1,183 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
-    <style>
-        .folder-icon {
-            width: 150px;
-            height: 100px;
-            background-size: cover;
-            background-repeat: no-repeat;
-            margin-right: 10px;
-            cursor: pointer; /* Add cursor style to indicate clickable */
-        }
-
-    </style>
-    <script>
-        // Function to open the folder
-        function openFolder(folderId) {
-            let url = "{% url 'folder' folder_id=0 %}";
-            url = url.replace("0", folderId);
-            window.location.href = url;
-        }
-    </script>
-    <!-- Display files inside the parent folder -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="d-flex flex-wrap">
-                {% for child_folder in folder.child_folders.all %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card" style="width: 18rem">
-                            <div class="card-body">
-                                <div class="folder-icon" onclick="openFolder({{ child_folder.id }})"></div>
-                                <div class="card-text-wrapper">
-                                    <h5 class="card-title text-info">{{ child_folder.folder_name }}</h5>
-                                    <p class="text-muted">Created: {{ child_folder.folder_date }}</p>
-                                    <div class="menu">
-                                        <div class="menu-options">
-                                            <a href="{% url 'folder' child_folder.id %}" class="dropdown-item">Open</a>
-                                            <a href="{% url 'update_folder' child_folder.id %}" class="dropdown-item">Rename</a>
-                                            <form method="POST" action="{% url 'delete_folder' child_folder.id %}"
-                                                  onsubmit="return confirm('Are you sure you want to delete?');">
-                                                {% csrf_token %}
-                                                <button type="submit" class="dropdown-item">Delete</button>
-                                            </form>
-                                        </div>
-                                        <span>&#8942;</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    <p>No folders found...</p>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2 mb-6">
-        <div class="card">
-            <div class="upload-btn-wrapper">
-                <form method="post" enctype="multipart/form-data" action="{% url 'upload_file' folder.id %}">
-                    {% csrf_token %}
-                    <button class="btn" style="color: #4f709c">Upload a file</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    {% if user.is_authenticated %}
-        <div class="row">
-            {% for file in files %}
-                <div class="col-md-2 mb-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="menu">
-                                <div class="card-text-wrapper">
-                                    {% if file.file_upload.url|lower|slice:'-4:' == ".pdf" %}
-                                        <img
-                                                src="{% static 'icons/pdf-icon.png' %}"
-                                                alt="PDF Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.jpg' %}
-                                        <img
-                                                src="{{ file.file_upload.url }}"
-                                                alt="Image"
-                                                class="file-icon smaller-image"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.png' %}
-
-                                        <img
-                                                src="{{ file.file_upload.url }}"
-                                                alt="Image"
-                                                class="file-icon smaller-image"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.psd' %}
-                                        <img
-                                                src="{% static 'icons/default-psd.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.xls' %}
-                                        <img
-                                                src="{% static 'icons/exel-default.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.doc' %}
-                                        <img
-                                                src="{% static 'icons/default-word.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.mp3' %}
-                                        <img
-                                                src="{% static 'icons/default-mp3.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.zip' %}
-                                        <img
-                                                src="{% static 'icons/default-zip.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.rar' %}
-                                        <img
-                                                src="{% static 'icons/default-rar.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
-                                        <img
-                                                src="{{ file.file_upload.url }}"
-                                                alt="Image"
-                                                class="file-icon smaller-image"
-                                        />
-                                        />
-                                    {% elif file.file_upload.url|upper|slice:'-4:' == '.MP4' %}
-                                        <img
-                                                src="{% static 'icons/default-video.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-3:' == '.py' %}
-                                        <img
-                                                src="{% static 'icons/default-python.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% elif file.file_upload.url|lower|slice:'-3:' == '.js' %}
-                                        <img
-                                                src="{% static 'icons/default-JavaScript.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% else %}
-                                        <img
-                                                src="{% static 'icons/default-image.png' %}"
-                                                alt="File Icon"
-                                                class="file-icon"
-                                        />
-                                    {% endif %}
-
-                                    <h5 class="card-title">{{ file.file_name }}</h5>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% if forloop.counter|divisibleby:6 and not forloop.last %}
-                    </div>
-                    <div class="row">
-                {% endif %}
-            {% endfor %}
-            </div>
-    {% endif %}
-    <script>
-        function openFile(url) {
-            window.open(url, "_blank");
-        }
-    </script>
-{% endblock %}
+{#{% extends 'base.html' %}#}
+{#{% load static %}#}
+{#{% block content %}#}
+{#    <style>#}
+{#        .folder-icon {#}
+{#            width: 150px;#}
+{#            height: 100px;#}
+{#            background-size: cover;#}
+{#            background-repeat: no-repeat;#}
+{#            margin-right: 10px;#}
+{#            cursor: pointer; /* Add cursor style to indicate clickable */#}
+{#        }#}
+{##}
+{#    </style>#}
+{#    <script>#}
+{#        // Function to open the folder#}
+{#        function openFolder(folderId) {#}
+{#            let url = "{% url 'folder' folder_id=0 %}";#}
+{#            url = url.replace("0", folderId);#}
+{#            window.location.href = url;#}
+{#        }#}
+{#    </script>#}
+{#    <!-- Display files inside the parent folder -->#}
+{#    <div class="row">#}
+{#        <div class="col-md-12">#}
+{#            <div class="d-flex flex-wrap">#}
+{#                {% for child_folder in folder.child_folders.all %}#}
+{#                    <div class="col-md-4 mb-4">#}
+{#                        <div class="card" style="width: 18rem">#}
+{#                            <div class="card-body">#}
+{#                                <div class="folder-icon" onclick="openFolder({{ child_folder.id }})"></div>#}
+{#                                <div class="card-text-wrapper">#}
+{#                                    <h5 class="card-title text-info">{{ child_folder.folder_name }}</h5>#}
+{#                                    <p class="text-muted">Created: {{ child_folder.folder_date }}</p>#}
+{#                                    <div class="menu">#}
+{#                                        <div class="menu-options">#}
+{#                                            <a href="{% url 'folder' child_folder.id %}" class="dropdown-item">Open</a>#}
+{#                                            <a href="{% url 'update_folder' child_folder.id %}" class="dropdown-item">Rename</a>#}
+{#                                            <form method="POST" action="{% url 'delete_folder' child_folder.id %}"#}
+{#                                                  onsubmit="return confirm('Are you sure you want to delete?');">#}
+{#                                                {% csrf_token %}#}
+{#                                                <button type="submit" class="dropdown-item">Delete</button>#}
+{#                                            </form>#}
+{#                                        </div>#}
+{#                                        <span>&#8942;</span>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% empty %}#}
+{#                    <p>No folders found...</p>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <div class="col-md-2 mb-6">#}
+{#        <div class="card">#}
+{#            <div class="upload-btn-wrapper">#}
+{#                <form method="post" enctype="multipart/form-data" action="{% url 'upload_file' folder.id %}">#}
+{#                    {% csrf_token %}#}
+{#                    <button class="btn" style="color: #4f709c">Upload a file</button>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    {% if user.is_authenticated %}#}
+{#        <div class="row">#}
+{#            {% for file in files %}#}
+{#                <div class="col-md-2 mb-6">#}
+{#                    <div class="card">#}
+{#                        <div class="card-body">#}
+{#                            <div class="menu">#}
+{#                                <div class="card-text-wrapper">#}
+{#                                    {% if file.file_upload.url|lower|slice:'-4:' == ".pdf" %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/pdf-icon.png' %}"#}
+{#                                                alt="PDF Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.jpg' %}#}
+{#                                        <img#}
+{#                                                src="{{ file.file_upload.url }}"#}
+{#                                                alt="Image"#}
+{#                                                class="file-icon smaller-image"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.png' %}#}
+{##}
+{#                                        <img#}
+{#                                                src="{{ file.file_upload.url }}"#}
+{#                                                alt="Image"#}
+{#                                                class="file-icon smaller-image"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.psd' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-psd.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.xls' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/exel-default.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.doc' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-word.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.mp3' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-mp3.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.zip' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-zip.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.rar' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-rar.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}#}
+{#                                        <img#}
+{#                                                src="{{ file.file_upload.url }}"#}
+{#                                                alt="Image"#}
+{#                                                class="file-icon smaller-image"#}
+{#                                        />#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|upper|slice:'-4:' == '.MP4' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-video.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-3:' == '.py' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-python.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% elif file.file_upload.url|lower|slice:'-3:' == '.js' %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-JavaScript.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% else %}#}
+{#                                        <img#}
+{#                                                src="{% static 'icons/default-image.png' %}"#}
+{#                                                alt="File Icon"#}
+{#                                                class="file-icon"#}
+{#                                        />#}
+{#                                    {% endif %}#}
+{##}
+{#                                    <h5 class="card-title">{{ file.file_name }}</h5>#}
+{#                                </div>#}
+{##}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                {% if forloop.counter|divisibleby:6 and not forloop.last %}#}
+{#                    </div>#}
+{#                    <div class="row">#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#            </div>#}
+{#    {% endif %}#}
+{#    <script>#}
+{#        function openFile(url) {#}
+{#            window.open(url, "_blank");#}
+{#        }#}
+{#    </script>#}
+{#{% endblock %}#}

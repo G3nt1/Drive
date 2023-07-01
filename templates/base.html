@@ -257,12 +257,16 @@
                     {% if user.is_authenticated %}
                         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
                            aria-label="Open user menu">
-                            <span class="avatar rounded">{{ user.first_name|first|upper }} {{ user.last_name|first|upper }}</span>
+                    <span style="color: green" class="avatar rounded"
+                          title="{{ user.first_name }} {{ user.last_name }}">
+                        {{ user.first_name|first|upper }} {{ user.last_name|first|upper }}
+                        </span>
                         </a>
+
                     {% endif %}
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <div class="dropdown-divider"></div>
-                        <a href="{% url 'user_logout' %}" class="dropdown-item">Logout</a>
+                        <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
                         <a href="{% url 'user_preference' %}" class="dropdown-item">User Preference</a>
                         {#                                                <a href="./sign-in.html" class="dropdown-item">Logout</a>#}
                     </div>

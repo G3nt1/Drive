@@ -45,25 +45,19 @@ def share_file(request, file_id):
                                                       'file': file})
 
 
+# views.py
 def share_with_me(request):
-
-    shared_folders = Shared.objects.filter(
-        folder__isnull=False, user=request.user)
+    shared_folders = Shared.objects.filter(folder__isnull=False, user=request.user)
     shared_files = Shared.objects.filter(file__isnull=False, user=request.user)
-
-    return render(request, 'share/share_with_me.html', {'shared_folders': shared_folders,
-                                                        'shared_files': shared_files,
-
-                                                        })
+    return render(request, 'share/share_with_me.html', {'shared_folders': shared_folders, 'shared_files': shared_files})
 
 
 @login_required
-def open_shared(request, pk):
-    shared_item = get_object_or_404(Shared, id=pk)
+def open_folder(request, shared_id):
+    shared_item = get_object_or_404(Shared, id=shared_id)
 
     if shared_item.folder:
         return render(request, 'share/open_shared.html', {'folder': shared_item.folder})
     elif shared_item.file:
         return render(request, 'share/open_shared.html', {'file': shared_item.file})
-
     return redirect('share_with_me')
