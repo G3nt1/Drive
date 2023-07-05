@@ -27,7 +27,7 @@
                         {% for folder in shared_folders %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'open_folder' folder.folder.id %}">
+                                    <a href="{% url 'folder' folder.id %}">
                                         <i class="ti ti-folder-filled text-warning"></i> {{ folder.folder.folder_name }}
                                     </a>
                                 </td>
@@ -59,7 +59,7 @@
                         <div class="card" style="width: auto">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <a href="{% url 'open_folder' folder.folder.id %}" style="text-decoration: none">
+                                    <a href="{% url 'folder' folder.folder.id %}" style="text-decoration: none">
                                         <i class="ti ti-folder-filled text-yellow" style="font-size: 100px;"></i>
                                         <div class="folder-details">
                                             <h5 class="card-title text-info" title="{{ folder.folder.folder_name }}">
