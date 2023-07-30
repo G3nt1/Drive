@@ -100,7 +100,7 @@ Special thanks to the Django community and the developers of various libraries u
 
 If you have any questions or need further assistance, feel free to contact the project maintainers:
 
-- Maintainer: [Gentjan Mateli](mateli.gentjan@gmail.com)
+- Maintainer: [Gentjan Mateli](mateligentjan@gmail.com)
 - Project Link: https://github.com/G3nt1
 
 ---
