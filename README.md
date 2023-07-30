@@ -1,7 +1,3 @@
-Based on the provided code, it appears to be a Django application for managing folders and files with user authentication. The application allows users to create folders, upload files to those folders, mark items as important, delete items, and share folders and files with other users.
-
-Here's a README template that you can use for GitHub:
-
 # Django File Management App
 
 This is a Django-based web application for managing folders and files with user authentication. Users can organize their files in folders, upload files to those folders, mark files and folders as important, and share them with other users.
