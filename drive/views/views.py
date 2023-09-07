@@ -25,6 +25,8 @@ def get_view_mode(request):
     return {'view_mode': view_mode}
 
 
+#
+
 @login_required
 def home(request):
     folders = Folder.objects.filter(user=request.user, is_deleted=False, parent_folder=None)

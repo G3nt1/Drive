@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Folder(models.Model):
@@ -68,8 +70,15 @@ class UserPreference(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    view_mode = models.CharField(max_length=10, choices=VIEW_MODE_CHOICES)
-    theme_mode = models.CharField(max_length=10, choices=THEME_MODE_CHOICES, null=True, blank=True)
+    view_mode = models.CharField(max_length=10, choices=VIEW_MODE_CHOICES, null=True, blank=True, default='icon')
+    theme_mode = models.CharField(max_length=10, choices=THEME_MODE_CHOICES, null=True, blank=True, default='light')
 
     def __str__(self):
         return f"Preferences for {self.user.username}"
+
+    @receiver(post_save, sender=User)
+    def create_user_preference(sender, instance, created, **kwargs):
+        if created:
+            UserPreference.objects.create(user=instance, view_mode='icon', theme_mode='light')
+
+    post_save.connect(create_user_preference, sender=User)

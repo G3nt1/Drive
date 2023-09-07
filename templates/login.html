@@ -9,7 +9,7 @@
             <div class="card card-md">
                 <div class="card-body">
                     <h2 class="h2 text-center mb-4">Login to your account</h2>
-                    <form action="{% url 'login' %}" method="post">
+                    <form action="{% url 'user_login' %}" method="post">
                         {{ form | crispy }}
                         {% csrf_token %}
 
