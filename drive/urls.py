@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from drive.views import trashViews, fileFolderViews, authViews, views, zipfile, important, share
@@ -52,6 +53,13 @@ urlpatterns = [
     path('share_with_me/', share.share_with_me, name='share_with_me'),
     path('share_folder/<int:folder_id>/', share.share_folder, name='shared_folder'),
     path('share_file/<int:file_id>/', share.share_file, name='shared_file'),
+
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+
+
 
 
     path('user_preference/', views.user_preference, name='user_preference'),

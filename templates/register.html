@@ -1,4 +1,3 @@
-
 {% load crispy_forms_filters %}
 {% load static %}
 {% load crispy_forms_tags %}
@@ -16,11 +15,11 @@
 
                         <input type="submit" class="btn btn-outline-secondary" value="Submit"/>
                     </form>
+                    <div class="text-center text-muted mt-3">
+                        You have Account ? <a href="{% url 'user_login' %}" tabindex="-1">login</a>
+                    </div>
+                </div>
 
-                </div>
-                <div class="text-center text-muted mt-3">
-                    you have Account ? <a href="{% url 'user_login' %}" tabindex="-1">login</a>
-                </div>
             </div>
         </div>
     </div>

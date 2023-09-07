@@ -15,11 +15,14 @@
 
                         <input type="submit" class="btn btn-outline-secondary" value="Submit"/>
                     </form>
+                    <div class="text-center text-muted mt-3">
+                        Forget the password?<a href="{% url 'password_reset' %}" tabindex="-1"> Reset </a>
+                    </div>
+                    <div class="text-center text-muted mt-3">
+                        Don't have account yet? <a href="{% url 'register' %}" tabindex="-1">Sign up</a>
+                    </div>
+                </div>
 
-                </div>
-                <div class="text-center text-muted mt-3">
-                    Don't have account yet? <a href="{% url 'register' %}" tabindex="-1">Sign up</a>
-                </div>
             </div>
         </div>
     </div>
