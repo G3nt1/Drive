@@ -1,9 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render
 
 from drive.forms import UserPreForm
 from drive.models import Folder, Files, UserPreference
+from drive.utils import speech_to_text_pipeline
 
 
 def get_theme_mode(request):
@@ -106,3 +109,29 @@ def user_preference(request):
     return render(request, 'user_preference.html', {'form': form,
 
                                                     })
+
+
+# Charts but lamda not installed
+# def Chart(request):
+#     file = Files.objects.all()
+#     folder = Folder.objects.all()
+#     fig = px.line(
+#         x=[c.upload_date for c in file],
+#         y=[c.upload_date for c in folder]
+#     )
+#     chart = fig.to_html()
+#     context = {'chart': chart}
+#     return render(request, 'chart.html', context)
+
+# appname/views.py
+
+
+def speech_to_text(request):
+    if request.method == 'POST':
+        try:
+            text = speech_to_text_pipeline(request.FILES['audio'])
+            return JsonResponse({'text': text})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    return render(request, 'speech_to_text.html')

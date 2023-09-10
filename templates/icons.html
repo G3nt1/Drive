@@ -10,6 +10,9 @@
         object-fit: cover;
     }
 
+    .card {
+        margin-bottom: 20px; /* Adjust this value as needed */
+    }
 
 </style>
 
@@ -24,16 +27,19 @@
             <a href="{% url 'create_folder_root' %}" class="btn btn-outline-secondary ">Create Folder</a>
             <a href="{% url 'upload_file_root' %}" class="btn btn-outline-secondary">Upload Files</a>
         {% endif %}
-        <a href="{% url 'export_all_files' %}" class="btn btn-outline-secondary ">Export</a>
+
+        <a href="{% url 'speech_to_text' %}" class="btn btn-outline-secondary ">speech to text</a>
+
+
     </div>
 </div>
-<div class="container">
+<div class="">
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex flex-wrap">
                 {% for folder in folders %}
                     <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                        <div class="card" style="width: auto">
+                        <div class="card" style="width: auto; margin: 7px">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
                                     <a href="{% url 'folder' folder.id %}" style="text-decoration: none">
@@ -100,38 +106,51 @@
                             <div class="menu">
                                 <div class="file-icon-container">
                                     {% if file.file_upload.url|lower|slice:'-4:' == ".pdf" %}
-                                        <img src="{% static 'icons/pdf-icon.png' %}" alt="PDF Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/pdf-icon.png' %}" alt="PDF Icon"
+                                                 class="file-icon"/>
+                                        </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
-                                        <img src="{{ file.file_upload.url }}" alt="Image"
-                                             class="file-icon smaller-image"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{{ file.file_upload.url }}" alt="Image"
+                                                 class="file-icon smaller-image"/>
+                                        </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.psd' %}
-                                        <img src="{% static 'icons/default-psd.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-psd.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.xls' %}
-                                        <img src="{% static 'icons/exel-default.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/exel-default.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.doc' %}
-                                        <img src="{% static 'icons/default-word.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-word.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.mp3' %}
-                                        <img src="{% static 'icons/default-mp3.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-mp3.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.zip' %}
-                                        <img src="{% static 'icons/default-zip.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-zip.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.rar' %}
-                                        <img src="{% static 'icons/default-rar.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-rar.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% elif file.file_upload.url|upper|slice:'-4:' == '.MP4' %}
-                                        <img src="{% static 'icons/default-video.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-video.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-3:' == '.py' %}
-                                        <img src="{% static 'icons/default-python.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-python.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-3:' == '.js' %}
-                                        <img src="{% static 'icons/default-JavaScript.png' %}" alt="File Icon"
-                                             class="file-icon"/>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-JavaScript.png' %}" alt="File Icon"
+                                                 class="file-icon"/> </a>
                                     {% else %}
                                         <img src="{% static 'icons/default-image.png' %}" alt="File Icon"
                                              class="file-icon"/>

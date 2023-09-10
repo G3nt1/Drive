@@ -3,6 +3,7 @@ from pathlib import Path
 
 from django.contrib import staticfiles
 
+FFMPEG_PATH = 'C:\\Users\\matel\\ffmpeg'
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,6 +31,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'multiupload',
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
 
 ]
 
