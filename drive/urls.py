@@ -59,7 +59,7 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
-    path('speech_to_text/', views.speech_to_text, name='speech_to_text'),
+    path('speech_to_text/', convert.speech_to_text, name='speech_to_text'),
     path('user_preference/', views.user_preference, name='user_preference'),
 
     path('upload/', convert.upload_pdf, name='upload_pdf'),

@@ -59,5 +59,4 @@ class UserPreForm(forms.ModelForm):
 
 
 class PDFUploadForm(forms.Form):
-    title = forms.CharField(max_length=255)
     pdf_file = forms.FileField()
