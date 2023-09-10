@@ -4,7 +4,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 
 from drive.forms import UserPreForm
-from drive.models import Folder, Files, UserPreference, PDFDocument
+from drive.models import Folder, Files, UserPreference
 
 
 def get_theme_mode(request):
@@ -79,44 +79,20 @@ def search(request):
         results_files = Files.objects.filter(
             Q(file_name__icontains=query) & Q(folder__user=user)
         )
-        results_pdf_title = PDFDocument.objects.filter(
-            Q(title__icontains=query)
+        results_content = Files.objects.filter(
+            Q(content__icontains=query) & Q(user=user)
         )
-        results_pdf_content = PDFDocument.objects.filter(Q(text_content__icontains=query)
-                                                         )
+
     else:
         results_folder = []
         results_files = []
-        results_pdf_title = []
-        results_pdf_content = []
+        results_content = []
     return render(request, 'home.html', {
         'folders': results_folder,
         'search_term': query,
         'files': results_files,
-        'pdf_title': results_pdf_title,
-        'pdf_content': results_pdf_content
-
+        'content': results_content
     })
-
-
-# def search_pdf(request):
-#     query = request.GET.get('query')
-#     if query:
-#
-#         results_pdf_title = PDFDocument.objects.filter(
-#             Q(title__icontains=query)
-#         )
-#         results_pdf_content = PDFDocument.objects.filter(Q(text_content__icontains=query)
-#                                                          )
-#     else:
-#         results_pdf_title = []
-#         results_pdf_content = []
-#     return render(request, 'pdf_list.html', {
-#         'search_term': query,
-#         'pdf_title': results_pdf_title,
-#         'pdf_content': results_pdf_content
-#
-#     })
 
 
 def user_preference(request):

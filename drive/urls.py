@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from drive.views import trashViews, fileFolderViews, authViews, views, zipfile, important, share, convert
+from drive.views import trashViews, fileFolderViews, authViews, views, zipfile, important, share
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -59,11 +59,7 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
-    path('speech_to_text/', convert.speech_to_text, name='speech_to_text'),
     path('user_preference/', views.user_preference, name='user_preference'),
-
-    path('upload/', convert.upload_pdf, name='upload_pdf'),
-    path('list/', convert.pdf_list, name='pdf_list'),
 
 ]
 if settings.DEBUG:

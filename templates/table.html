@@ -103,7 +103,51 @@
 
                     </tr>
                 {% endfor %}
+
+                {% for file in content %}
+                    <tr>
+                        <td>
+                            <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                <i class="ti ti-file text-success"></i> {{ file.file_name }}
+                            </a>
+
+                        </td>
+                        <td>{{ file.upload_date }}</td>
+                        <td>{{ files_size }}</td>
+                        <td class="text-end actions">
+                            <form method="post" action="">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <a href="{% url 'rename_files' file.id %}" class="me-2">
+                                        <i class="ti ti-pencil" title="Rename"></i>
+                                    </a>
+                                    {% if file.is_important %}
+                                        <a href="{% url 'unmark_file' file.id %}" class="me-2">
+                                            <i class="ti ti-star-filled text-warning" title="Important"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'mark_file' file.id %}" class="me-2">
+                                            <i class="ti ti-star" title="Share"></i>
+                                        </a>
+                                    {% endif %}
+                                    <div class="actions">
+                                        <a href="{% url 'delete_file' file.id %}">
+                                            <i class="ti ti-trash" title="Delete"></i>
+                                        </a>
+                                        <a href="{% url 'shared_file' file.id %}" class="me-2">
+                                            <i class="ti ti-brand-stackshare" title="Share"></i>
+                                        </a>
+                                    </div>
+                            </form>
+                        </td>
+
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    <script>
+        function openFile(url) {
+            window.open(url, "_blank");
+        }
+    </script>

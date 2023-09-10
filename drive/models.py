@@ -1,3 +1,4 @@
+from PyPDF2 import PdfReader
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -27,8 +28,8 @@ class Files(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     folder = models.ForeignKey('Folder', on_delete=models.CASCADE, default=0, null=True)
     file_name = models.CharField(max_length=255)
-    file_upload = models.FileField(
-        blank=True, null=True, upload_to='media/files')
+    file_upload = models.FileField(blank=True, null=True, upload_to='media/files')
+    content = models.TextField(blank=True, null=True)
     upload_date = models.DateTimeField(auto_now_add=True)
     is_important = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
@@ -37,6 +38,27 @@ class Files(models.Model):
     class Meta:
         verbose_name_plural = 'Files'
         ordering = ['upload_date']
+
+
+# Create a signal to handle file content extraction and saving
+@receiver(post_save, sender=Files)
+def extract_and_save_content(sender, instance, created, **kwargs):
+    if created and instance.file_upload and instance.file_upload.name.endswith(('.txt', '.pdf')):
+        file_path = instance.file_upload.path
+        if instance.file_upload.name.endswith('.txt'):
+            # If it's a text file, read its content
+            with open(file_path, 'r', encoding='utf-8') as file:
+                content = file.read()
+        elif instance.file_upload.name.endswith('.pdf'):
+            # If it's a PDF file, extract its text content using PyPDF2
+            pdf = PdfReader(file_path)
+            content = ''
+            for page in pdf.pages:
+                content += page.extract_text()
+
+        # Save the extracted content to the instance
+        instance.content = content
+        instance.save()
 
 
 class Shared(models.Model):
@@ -82,9 +104,3 @@ class UserPreference(models.Model):
             UserPreference.objects.create(user=instance, view_mode='icon', theme_mode='light')
 
     post_save.connect(create_user_preference, sender=User)
-
-
-class PDFDocument(models.Model):
-    title = models.CharField(max_length=255)
-    text_content = models.TextField()
-    upload_date = models.DateTimeField(auto_now_add=True)
