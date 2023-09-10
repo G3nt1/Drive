@@ -56,3 +56,8 @@ class UserPreForm(forms.ModelForm):
             'view_mode': forms.RadioSelect(attrs={'class': 'view-mode-radio'}),
             'theme_mode': forms.RadioSelect(attrs={'class': 'theme-mode-radio'}),
         }
+
+
+class PDFUploadForm(forms.Form):
+    title = forms.CharField(max_length=255)
+    pdf_file = forms.FileField()

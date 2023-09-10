@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <ul>
+        {% for pdf_doc in pdf_documents %}
+            <li>
+                <strong>{{ pdf_doc.title }}</strong><br>
+                {{ pdf_doc.upload_date }}<br>
+                {{ pdf_doc.text_content }}
+            </li>
+        {% empty %}
+            <li>No PDF documents uploaded yet.</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

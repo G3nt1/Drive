@@ -82,3 +82,9 @@ class UserPreference(models.Model):
             UserPreference.objects.create(user=instance, view_mode='icon', theme_mode='light')
 
     post_save.connect(create_user_preference, sender=User)
+
+
+class PDFDocument(models.Model):
+    title = models.CharField(max_length=255)
+    text_content = models.TextField()
+    upload_date = models.DateTimeField(auto_now_add=True)
