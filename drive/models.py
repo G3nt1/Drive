@@ -1,8 +1,13 @@
+import os
+
+import exifread
+from PIL import Image
 from PyPDF2 import PdfReader
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from geopy.geocoders import Nominatim
 
 
 class Folder(models.Model):
@@ -40,25 +45,67 @@ class Files(models.Model):
         ordering = ['upload_date']
 
 
-# Create a signal to handle file content extraction and saving
 @receiver(post_save, sender=Files)
 def extract_and_save_content(sender, instance, created, **kwargs):
-    if created and instance.file_upload and instance.file_upload.name.endswith(('.txt', '.pdf')):
+    if created and instance.file_upload:
         file_path = instance.file_upload.path
-        if instance.file_upload.name.endswith('.txt'):
-            # If it's a text file, read its content
-            with open(file_path, 'r', encoding='utf-8') as file:
-                content = file.read()
-        elif instance.file_upload.name.endswith('.pdf'):
-            # If it's a PDF file, extract its text content using PyPDF2
-            pdf = PdfReader(file_path)
-            content = ''
-            for page in pdf.pages:
-                content += page.extract_text()
+        file_name, file_extension = os.path.splitext(instance.file_upload.name)
 
-        # Save the extracted content to the instance
-        instance.content = content
-        instance.save()
+        # Check if it's an image file based on the file extension
+        if file_extension.lower() in ['.jpg', '.jpeg', '.png', '.gif']:
+            # Extract image details
+            try:
+                file_size_bytes = os.path.getsize(file_path)
+                file_size_mb = file_size_bytes / (1024 * 1024)
+
+                image = Image.open(file_path)
+                width, height = image.size
+            except Exception as e:
+                width, height = None, None
+
+            # Extract image metadata if available (e.g., date and location)
+            date_taken = None
+            location = None
+            with open(file_path, 'rb') as f:
+                tags = exifread.process_file(f, details=False)
+                if 'EXIF DateTimeOriginal' in tags:
+                    date_taken = tags['EXIF DateTimeOriginal']
+                if 'GPS GPSLatitude' in tags and 'GPS GPSLongitude' in tags:
+                    latitude = tags['GPS GPSLatitude'].values
+                    longitude = tags['GPS GPSLongitude'].values
+                    location = f'Latitude: {latitude}, Longitude: {longitude}'
+
+            # Update the instance with image details
+            instance.content = f"Image Size: {width}x{height}\nFile Size: {file_size_mb:.2f} MB\nDate Taken: {date_taken}\nLocation: {location}"
+            instance.save()
+        elif file_extension.lower() in ['.txt', '.pdf']:
+            file_path = instance.file_upload.path
+            if instance.file_upload.name.endswith('.txt'):
+                # If it's a text file, read its content
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    content = file.read()
+            elif instance.file_upload.name.endswith('.pdf'):
+                # If it's a PDF file, extract its text content using PyPDF2
+                pdf = PdfReader(file_path)
+                content = ''
+                for page in pdf.pages:
+                    content += page.extract_text()
+
+            # Save the extracted content to the instance
+            instance.content = content
+            instance.save()
+
+
+def get_location_name(latitude, longitude):
+    try:
+        geolocator = Nominatim(user_agent="myGeocoder")
+        location = geolocator.reverse(f"{latitude}, {longitude}", exactly_one=True)
+        if location:
+            return location.address
+        else:
+            return 'Location not found'
+    except Exception as e:
+        return 'Geocoding service error'
 
 
 class Shared(models.Model):
