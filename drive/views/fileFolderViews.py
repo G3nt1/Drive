@@ -1,6 +1,8 @@
 import os
 
+import folium
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from drive.forms import FolderForm, FileUploadForm, FileUpdateForm
@@ -62,7 +64,6 @@ def update_folder(request, folder_id):
 
 
 def upload_file(request, folder_id=None):
-
     if request.method == 'POST':
         files = request.FILES.getlist('file_upload')  # Get the list of uploaded files
 
@@ -100,3 +101,36 @@ def rename_files(request, file_id):
 
     return render(request, 'files/update-file.html', {'form': form, 'files': files, 'file_id': file_id,
                                                       })
+
+
+def display_image_location(request, file_id):
+    try:
+        file = Files.objects.get(id=file_id)
+
+        # Check if the file has location information
+        if file.latitude is not None and file.longitude is not None:
+            latitude = file.latitude
+            longitude = file.longitude
+
+            # Create a Folium map centered around the image's location
+            image_map = folium.Map(location=[latitude, longitude], zoom_start=15)
+
+            # Add a marker for the image's location
+            folium.Marker([latitude, longitude], tooltip="Image Location").add_to(image_map)
+
+            # Convert the Folium map to HTML
+            map_html = image_map._repr_html_()
+        else:
+            # If there is no location information, set map_html to an empty string
+            map_html = ""
+
+        context = {
+            "file": file,
+            "map_html": map_html,
+        }
+
+        return render(request, "files/images_details.html", context)
+
+    except Files.DoesNotExist:
+        # Handle the case where the file with the given ID doesn't exist
+        return HttpResponse("File not found", status=404)

@@ -35,10 +35,17 @@ class Files(models.Model):
     file_name = models.CharField(max_length=255)
     file_upload = models.FileField(blank=True, null=True, upload_to='media/files')
     content = models.TextField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
     upload_date = models.DateTimeField(auto_now_add=True)
     is_important = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     shared_with = models.ManyToManyField(User, through='Shared', related_name='shared_files')
+
+    # ...
+
+    def __str__(self):
+        return self.file_name
 
     class Meta:
         verbose_name_plural = 'Files'
@@ -65,7 +72,7 @@ def extract_and_save_content(sender, instance, created, **kwargs):
 
             # Extract image metadata if available (e.g., date and location)
             date_taken = None
-            location = None
+            location_name = None
             with open(file_path, 'rb') as f:
                 tags = exifread.process_file(f, details=False)
                 if 'EXIF DateTimeOriginal' in tags:
@@ -73,12 +80,20 @@ def extract_and_save_content(sender, instance, created, **kwargs):
                 if 'GPS GPSLatitude' in tags and 'GPS GPSLongitude' in tags:
                     latitude = tags['GPS GPSLatitude'].values
                     longitude = tags['GPS GPSLongitude'].values
-                    location = f'Latitude: {latitude}, Longitude: {longitude}'
+                    print(f"lat: {latitude} long: {longitude} ")
+                    location_name = get_location_name(latitude, longitude)
+
+                    # Update latitude and longitude fields
+                    instance.latitude = convert_to_float(latitude)
+                    instance.longitude = convert_to_float(longitude)
 
             # Update the instance with image details
-            instance.content = f"Image Size: {width}x{height}\nFile Size: {file_size_mb:.2f} MB\nDate Taken: {date_taken}\nLocation: {location}"
+            instance.content = f"Image Size: {width}x{height}\nFile Size: {file_size_mb:.2f} MB\nDate Taken: {date_taken}\nLocation: {location_name}"
             instance.save()
         elif file_extension.lower() in ['.txt', '.pdf']:
+            # ... (rest of your code for handling text and PDF files)
+
+
             file_path = instance.file_upload.path
             if instance.file_upload.name.endswith('.txt'):
                 # If it's a text file, read its content
@@ -96,16 +111,28 @@ def extract_and_save_content(sender, instance, created, **kwargs):
             instance.save()
 
 
+def convert_to_float(coordinate):
+    # Assuming coordinate is in the format [integer_part, numerator, denominator]
+    integer_part, numerator, denominator = coordinate
+    return float(integer_part) + (numerator / denominator)
+
+
 def get_location_name(latitude, longitude):
-    try:
-        geolocator = Nominatim(user_agent="myGeocoder")
-        location = geolocator.reverse(f"{latitude}, {longitude}", exactly_one=True)
-        if location:
-            return location.address
-        else:
-            return 'Location not found'
-    except Exception as e:
-        return 'Geocoding service error'
+    if latitude is not None and longitude is not None:
+        try:
+            geolocator = Nominatim(user_agent="myGeocoder")
+            location = geolocator.reverse(f"{convert_to_float(latitude)}, {convert_to_float(longitude)}",
+                                          exactly_one=True)
+
+            if location:
+                address = location.address
+                country = location.raw.get("address", {}).get("country")
+                return address, country
+            else:
+                return 'Location not found'
+        except Exception as e:
+            return 'Geocoding service error'
+    return 'Latitude and longitude must be provided'
 
 
 class Shared(models.Model):

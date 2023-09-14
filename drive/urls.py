@@ -61,6 +61,9 @@ urlpatterns = [
 
     path('user_preference/', views.user_preference, name='user_preference'),
 
+    path('file/<int:file_id>/location/', fileFolderViews.display_image_location, name='images_details'),
+
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,

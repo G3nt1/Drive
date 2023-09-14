@@ -133,3 +133,4 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'gentmateli@gmail.com'
 EMAIL_HOST_PASSWORD = 'csxuqtdwyenqaflv'
+
