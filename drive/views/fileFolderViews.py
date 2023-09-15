@@ -136,23 +136,31 @@ def display_image_location(request, file_id):
         return HttpResponse("File not found", status=404)
 
 
-# views.py
-
-
 def display_all_image_locations(request):
     try:
         # Retrieve all picture objects with valid location information
         pictures_with_location = Files.objects.exclude(latitude=None, longitude=None)
 
-        # Create a Folium map
-        image_map = folium.Map(location=[0, 0], zoom_start=2)  # Set initial map location and zoom level
+        # Create a Folium map with an initial location and zoom level
+        image_map = folium.Map(location=[0, 0], zoom_start=2)
 
-        # Add markers for each picture's location
+        # Create a feature group to add markers
+        marker_group = folium.FeatureGroup(name='Markers')
+
+        # Add markers for each picture's location to the marker group
         for picture in pictures_with_location:
             latitude = picture.latitude
             longitude = picture.longitude
-            marker = folium.Marker([latitude, longitude], tooltip=picture.file_name)
-            marker.add_to(image_map)
+            image_url = picture.file_upload.url  # Get the image URL
+            tooltip_content = f'<img src="{image_url}" alt="{picture.file_name}" style="max-height: 100px;"><br>{picture.file_name}'
+            marker = folium.Marker([latitude, longitude], tooltip=tooltip_content, parse_html=True)
+            marker.add_to(marker_group)
+
+        # Add the marker group to the map
+        marker_group.add_to(image_map)
+
+        # Fit the map to the bounds of the markers
+        image_map.fit_bounds(marker_group.get_bounds())
 
         # Convert the Folium map to HTML
         map_html = image_map._repr_html_()
