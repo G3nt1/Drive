@@ -149,6 +149,10 @@
                                         <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
                                             <img src="{% static 'icons/default-JavaScript.png' %}" alt="File Icon"
                                                  class="file-icon"/> </a>
+                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.txt' %}
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <img src="{% static 'icons/default-Text.png' %}"
+                                                 class="file-icon" alt="File Icon"/> </a>
                                     {% else %}
                                         <img src="{% static 'icons/default-image.png' %}" alt="File Icon"
                                              class="file-icon"/>

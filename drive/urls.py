@@ -62,6 +62,7 @@ urlpatterns = [
     path('user_preference/', views.user_preference, name='user_preference'),
 
     path('file/<int:file_id>/location/', fileFolderViews.display_image_location, name='images_details'),
+    path('all_locations/', fileFolderViews.display_all_image_locations, name='all_images_locations'),
 
 
 ]

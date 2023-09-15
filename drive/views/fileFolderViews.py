@@ -134,3 +134,35 @@ def display_image_location(request, file_id):
     except Files.DoesNotExist:
         # Handle the case where the file with the given ID doesn't exist
         return HttpResponse("File not found", status=404)
+
+
+# views.py
+
+
+def display_all_image_locations(request):
+    try:
+        # Retrieve all picture objects with valid location information
+        pictures_with_location = Files.objects.exclude(latitude=None, longitude=None)
+
+        # Create a Folium map
+        image_map = folium.Map(location=[0, 0], zoom_start=2)  # Set initial map location and zoom level
+
+        # Add markers for each picture's location
+        for picture in pictures_with_location:
+            latitude = picture.latitude
+            longitude = picture.longitude
+            marker = folium.Marker([latitude, longitude], tooltip=picture.file_name)
+            marker.add_to(image_map)
+
+        # Convert the Folium map to HTML
+        map_html = image_map._repr_html_()
+
+        context = {
+            "map_html": map_html,
+        }
+
+        return render(request, "files/all_image_locations.html", context)
+
+    except Exception as e:
+        # Handle exceptions as needed
+        return HttpResponse("Error: " + str(e), status=500)
