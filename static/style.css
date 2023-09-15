@@ -1,0 +1,42 @@
+.documents-table a {
+    text-decoration: none;
+}
+
+.documents-table .actions i {
+    padding-right: 5px;
+}
+
+#sidebar-menu i.ti {
+    font-size: 22px;
+}
+
+.documents-table {
+    line-height: 22px;
+}
+
+.documents-table thead th {
+    font-weight: bold !important;
+}
+
+.documents-table i {
+    vertical-align: sub;
+    font-size: 22px;
+}
+
+.folder-icon {
+    width: 150px;
+    height: 100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.folder-icon {
+            width: 150px;
+            height: 100px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin-right: 10px;
+            cursor: pointer; /* Add cursor style to indicate clickable */
+        }

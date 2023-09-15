@@ -2,7 +2,5 @@ media
 .vscode
 .idea
 !static/.gitkeep
-static
 venv
 db.sqlite3
-staticfiles
