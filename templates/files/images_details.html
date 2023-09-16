@@ -1,26 +1,41 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row">
-        <div class="col-md-9">
-            <div class="preview-img-container" style=" background-image: url('{{ file.file_upload.url }}');">
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Image Details</h5>
-                    <p class="card-text" id="location-data">
-                        {{ file.content | linebreaks | safe }}
-                    </p>
+        {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
+            <!-- Render the image as you want -->
+            <div class="col-md-9">
+                <div class="preview-img-container" style="background-image: url('{{ file.file_upload.url }}');">
                 </div>
             </div>
-            {% if map_html %}
+            <div class="col-md-3">
                 <div class="card">
-                    <div id="map-container">
-                        {{ map_html|safe }}
+                    <div class="card-body">
+                        <h5 class="card-title">Details</h5>
+                        <p class="card-text" id="location-data">
+                            {{ file.content | linebreaks | safe }}
+                        </p>
                     </div>
                 </div>
-            {% endif %}
-        </div>
+                {% if map_html %}
+                    <div class="card">
+                        <div id="map-container">
+                            {{ map_html|safe }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="col-md-12">
+                <div class="card" style="background: #000">
+                    <div class="card-body">
+                        <p class="card-title">
+                        <h1 style="text-align: center">{{ file.file_name }}</h1></p>
+                        <p class="card-text" id="location-data">
+                            {{ file.content | linebreaks | safe }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
