@@ -109,7 +109,7 @@
                                         <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
                                             <img src="{% static 'icons/default-psd.png' %}" alt="File Icon"
                                                  class="file-icon"/> </a>
-                                    {% elif file.file_upload.url|lower|slice:'-4:' == '.xls' %}
+                                    {% elif file.file_upload.url|lower|slice:'-5:' == '.xlsx' %}
                                         <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
                                             <img src="{% static 'icons/exel-default.png' %}" alt="File Icon"
                                                  class="file-icon"/> </a>
@@ -143,8 +143,8 @@
                                                  class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.txt' %}
                                         <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
-                                            <img src="{% static 'icons/default-Text.png' %}"
-                                                 class="file-icon" alt="File Icon"/>
+                                            <img src="{% static 'icons/default-Text.png' %}" class="file-icon"
+                                                 alt="File Icon"/>
                                         </a>
                                     {% else %}
                                         <img src="{% static 'icons/default-image.png' %}" alt="File Icon"
@@ -152,9 +152,9 @@
                                     {% endif %}
                                     {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-4:' == '.gif' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
                                     {% else %}
-                                    <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
-                                        <h3> {{ file.file_name|truncatechars:10 }}</h3>
-                                    </a>
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                            <h3> {{ file.file_name|truncatechars:10 }}</h3>
+                                        </a>
                                     {% endif %}
                                     <p class="card-title">{{ file.upload_date }}</p>
                                     <form method="post" action="">
@@ -178,11 +178,6 @@
                                                 <a href="{% url 'shared_file' file.id %}" class="me-2">
                                                     <i class="ti ti-brand-stackshare" title="Share"></i>
                                                 </a>
-                                                {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
-                                                    <a href="{% url 'images_details' file.id %}" class="me-2">
-                                                        <i class="ti ti-list-details" title="Details"></i>
-                                                    </a>
-                                                {% endif %}
                                             </div>
                                         </div>
                                     </form>
@@ -191,14 +186,10 @@
                         </div>
                     </div>
                 </div>
-                {% if forloop.counter|divisibleby:6 and not forloop.last %}
-                    </div>
-                    <div class="row">
-                {% endif %}
             {% endfor %}
-            </div>
+        </div>
     {% endif %}
-</div>
+
 {% if user.is_authenticated %}
     <div class="row">
         {% for file in content %}

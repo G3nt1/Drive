@@ -76,9 +76,8 @@ def search(request):
         results_folder = Folder.objects.filter(
             Q(folder_name__icontains=query) & Q(user=user)
         )
-        results_files = Files.objects.filter(
-            Q(file_name__icontains=query) & Q(folder__user=user)
-        )
+        results_files = Files.objects.filter(file_name__icontains=query)
+
         results_content = Files.objects.filter(
             Q(content__icontains=query) & Q(user=user)
         )
