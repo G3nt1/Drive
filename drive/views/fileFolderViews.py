@@ -113,7 +113,7 @@ def display_image_location(request, file_id):
             longitude = file.longitude
 
             # Create a Folium map centered around the image's location
-            image_map = folium.Map(location=[latitude, longitude], zoom_start=15)
+            image_map = folium.Map(location=[latitude, longitude], zoom_start=8)
 
             # Add a marker for the image's location
             folium.Marker([latitude, longitude], tooltip="Image Location").add_to(image_map)

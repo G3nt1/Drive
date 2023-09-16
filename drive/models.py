@@ -109,7 +109,7 @@ def extract_and_save_content(sender, instance, created, **kwargs):
 
             # Create and save a thumbnail
             thumbnail = image.copy()
-            thumbnail.thumbnail((100, 100))  # Adjust the size as needed
+            thumbnail.thumbnail((400, 400))  # Adjust the size as needed
             thumbnail_filename = f"{file_name}_thumb{file_extension}"
             thumbnail_path = os.path.join(settings.MEDIA_ROOT, 'thumbnails', thumbnail_filename)
 
