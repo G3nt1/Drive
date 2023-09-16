@@ -214,7 +214,7 @@
                                     </a>
                                 {% elif file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
                                     <a href="{% url 'images_details' file.id %}">
-                                        <img src="{{ file.file_upload.url }}" alt="Image"
+                                        <img src="{{ file.thumbnail_upload.url }}" alt="Image"
                                              class="file-icon smaller-image"/>
                                     </a>
                                 {% elif file.file_upload.url|lower|slice:'-4:' == '.psd' %}

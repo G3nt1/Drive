@@ -104,42 +104,44 @@ def rename_files(request, file_id):
 
 
 def display_image_location(request, file_id):
-    try:
-        file = Files.objects.get(id=file_id)
+    if request.user.is_authenticated:
+        try:
+            file = Files.objects.get(id=file_id)
 
-        # Check if the file has location information
-        if file.latitude is not None and file.longitude is not None:
-            latitude = file.latitude
-            longitude = file.longitude
+            # Check if the file has location information
+            if file.latitude is not None and file.longitude is not None:
+                latitude = file.latitude
+                longitude = file.longitude
 
-            # Create a Folium map centered around the image's location
-            image_map = folium.Map(location=[latitude, longitude], zoom_start=8)
+                # Create a Folium map centered around the image's location
+                image_map = folium.Map(location=[latitude, longitude], zoom_start=8)
 
-            # Add a marker for the image's location
-            folium.Marker([latitude, longitude], tooltip="Image Location").add_to(image_map)
+                # Add a marker for the image's location
+                folium.Marker([latitude, longitude], tooltip="Image Location").add_to(image_map)
 
-            # Convert the Folium map to HTML
-            map_html = image_map._repr_html_()
-        else:
-            # If there is no location information, set map_html to an empty string
-            map_html = ""
+                # Convert the Folium map to HTML
+                map_html = image_map._repr_html_()
+            else:
+                # If there is no location information, set map_html to an empty string
+                map_html = ""
 
-        context = {
-            "file": file,
-            "map_html": map_html,
-        }
+            context = {
+                "file": file,
+                "map_html": map_html,
+            }
 
-        return render(request, "files/images_details.html", context)
+            return render(request, "files/images_details.html", context)
 
-    except Files.DoesNotExist:
-        # Handle the case where the file with the given ID doesn't exist
-        return HttpResponse("File not found", status=404)
+        except Files.DoesNotExist:
+            # Handle the case where the file with the given ID doesn't exist
+            return HttpResponse("File not found", status=404)
 
 
+@login_required
 def display_all_image_locations(request):
     try:
         # Retrieve all picture objects with valid location information
-        pictures_with_location = Files.objects.exclude(latitude=None, longitude=None)
+        pictures_with_location = Files.objects.filter(user=request.user).exclude(latitude=None, longitude=None)
 
         # Create a Folium map with an initial location and zoom level
         image_map = folium.Map(location=[0, 0], zoom_start=2)
