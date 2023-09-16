@@ -1,8 +1,10 @@
 import os
 
 import exifread
-from PIL import Image
+from PIL import Image, ExifTags
 from PyPDF2 import PdfReader
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -41,8 +43,7 @@ class Files(models.Model):
     is_important = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     shared_with = models.ManyToManyField(User, through='Shared', related_name='shared_files')
-
-    # ...
+    thumbnail_upload = models.ImageField(blank=True, null=True, upload_to='media/thumbnails')
 
     def __str__(self):
         return self.file_name
@@ -66,6 +67,23 @@ def extract_and_save_content(sender, instance, created, **kwargs):
                 file_size_mb = file_size_bytes / (1024 * 1024)
 
                 image = Image.open(file_path)
+
+                # Check and apply Exif orientation metadata
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        try:
+                            exif = dict(image._getexif().items())
+                            if orientation in exif:
+                                if exif[orientation] == 3:
+                                    image = image.rotate(180, expand=True)
+                                elif exif[orientation] == 6:
+                                    image = image.rotate(270, expand=True)
+                                elif exif[orientation] == 8:
+                                    image = image.rotate(90, expand=True)
+                        except (AttributeError, KeyError, IndexError):
+                            # No Exif data found, or orientation tag not present
+                            pass
+
                 width, height = image.size
             except Exception as e:
                 width, height = None, None
@@ -80,7 +98,6 @@ def extract_and_save_content(sender, instance, created, **kwargs):
                 if 'GPS GPSLatitude' in tags and 'GPS GPSLongitude' in tags:
                     latitude = tags['GPS GPSLatitude'].values
                     longitude = tags['GPS GPSLongitude'].values
-                    print(f"lat: {latitude} long: {longitude} ")
                     location_name = get_location_name(latitude, longitude)
 
                     # Update latitude and longitude fields
@@ -89,17 +106,31 @@ def extract_and_save_content(sender, instance, created, **kwargs):
 
             # Update the instance with image details
             instance.content = f"Image Size: {width}x{height}\nFile Size: {file_size_mb:.2f} MB\nDate Taken: {date_taken}\nLocation: {location_name}"
-            instance.save()
+
+            # Create and save a thumbnail
+            thumbnail = image.copy()
+            thumbnail.thumbnail((100, 100))  # Adjust the size as needed
+            thumbnail_filename = f"{file_name}_thumb{file_extension}"
+            thumbnail_path = os.path.join(settings.MEDIA_ROOT, 'thumbnails', thumbnail_filename)
+
+            # Ensure the 'thumbnails' directory exists
+            thumbnail_directory = os.path.dirname(thumbnail_path)
+            os.makedirs(thumbnail_directory, exist_ok=True)
+
+            # Save the thumbnail image to the thumbnail path
+            thumbnail.save(thumbnail_path)
+
+            # Update the instance with the correct thumbnail path
+            instance.thumbnail_upload = 'thumbnails/' + thumbnail_filename
+
         elif file_extension.lower() in ['.txt', '.pdf']:
-            # ... (rest of your code for handling text and PDF files)
-
-
+            # Handle non-image file types here
             file_path = instance.file_upload.path
-            if instance.file_upload.name.endswith('.txt'):
+            if file_extension.lower() == '.txt':
                 # If it's a text file, read its content
                 with open(file_path, 'r', encoding='utf-8') as file:
                     content = file.read()
-            elif instance.file_upload.name.endswith('.pdf'):
+            elif file_extension.lower() == '.pdf':
                 # If it's a PDF file, extract its text content using PyPDF2
                 pdf = PdfReader(file_path)
                 content = ''
@@ -108,7 +139,9 @@ def extract_and_save_content(sender, instance, created, **kwargs):
 
             # Save the extracted content to the instance
             instance.content = content
-            instance.save()
+
+        # Save the instance after handling both image and non-image file types
+        instance.save()
 
 
 def convert_to_float(coordinate):

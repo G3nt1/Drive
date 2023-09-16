@@ -151,7 +151,7 @@ def display_all_image_locations(request):
         for picture in pictures_with_location:
             latitude = picture.latitude
             longitude = picture.longitude
-            image_url = picture.file_upload.url  # Get the image URL
+            image_url = picture.thumbnail_upload.url  # Get the image URL
             tooltip_content = f'<img src="{image_url}" alt="{picture.file_name}" style="max-height: 100px;"><br>{picture.file_name}'
             marker = folium.Marker([latitude, longitude], tooltip=tooltip_content, parse_html=True)
             marker.add_to(marker_group)
