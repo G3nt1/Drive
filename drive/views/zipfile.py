@@ -1,9 +1,13 @@
+# views.py
+
 import os
 import zipfile
 
+from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 
-from drive.models import Folder, Files
+from .models import Folder, Files
 
 
 def export_all_files(request):
@@ -12,7 +16,7 @@ def export_all_files(request):
 
     # Create the zip file
     zip_filename = 'exported_all_files.zip'
-    zip_path = os.path.join(os.path.expanduser("~"), 'Downloads', zip_filename)
+    zip_path = os.path.join(settings.MEDIA_ROOT, zip_filename)
     with zipfile.ZipFile(zip_path, 'w') as zf:
         # Add each folder and its contents to the zip
         for folder_obj in user_folders:
@@ -37,14 +41,13 @@ def export_all_files(request):
 
     return response
 
-
 def export_files_by_id(request, folder_id):
     # Get the specific folder by ID
-    folder_obj = Folder.objects.get(id=folder_id, user=request.user)
+    folder_obj = get_object_or_404(Folder, id=folder_id, user=request.user)
 
     # Create the zip file
     zip_filename = 'exported_folder_{}.zip'.format(folder_id)
-    zip_path = os.path.join(os.path.expanduser("~"), 'Downloads', zip_filename)
+    zip_path = os.path.join(settings.MEDIA_ROOT, zip_filename)
     with zipfile.ZipFile(zip_path, 'w') as zf:
         # Create a directory inside the zip file
         folder_path = folder_obj.folder_name + '/'
