@@ -55,22 +55,28 @@
                 {% endif %}
             </div>
         {% else %}
-            <div class="col-md-12">
-                <div class="card bg-dark text-white">
-                    <div class="card-body">
-                        <h1 class="card-title text-center">{{ file.file_name }}</h1>
-                        <p class="card-text" id="location-data">
-                            {{ file.content | linebreaks | safe }}
-                        </p>
-
-                        <!-- Glass-like download button -->
-                        <a href="{{ file.file_upload.url }}" class="glass-download-button" download>
-                            Download
-                        </a>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="preview-img-container">
+                        <div class="mx-auto" style="width: 800px;">
+                            <div class="card bg-white text-dark">
+                                <div class="card-body">
+                                    <h1 class="card-title text-center">{{ file.file_name }}</h1>
+                                    <p class="card-text" id="location-data">
+                                        {{ file.content | linebreaks | safe }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div>
+                <a href="{{ file.file_upload.url }}" class="glass-download-button" download>
+                    Download
+                </a>
+            </div>
+            </div>
         {% endif %}
-    </div>
 {% endblock %}
 

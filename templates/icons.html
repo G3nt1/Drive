@@ -86,7 +86,6 @@
                 {% endfor %}
         </div>
     </div>
-
     {% if user.is_authenticated %}
         <div class="row">
             {% for file in files %}
@@ -96,7 +95,7 @@
                             <div class="menu">
                                 <div class="file-icon-container">
                                     {% if file.file_upload.url|lower|slice:'-4:' == ".pdf" %}
-                                        <a href="{% url 'images_details' file.id %}">
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
                                             <img src="{% static 'icons/pdf-icon.png' %}" alt="PDF Icon"
                                                  class="file-icon"/>
                                         </a>
@@ -104,6 +103,7 @@
                                         <a href="{% url 'images_details' file.id %}">
                                             <img src="{{ file.thumbnail_upload.url }}" alt="Image"
                                                  class="file-icon smaller-image" title="{{ file.content }}"/>
+                                            <h3> {{ file.file_name|truncatechars:10 }}</h3>
                                         </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.psd' %}
                                         <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
@@ -142,16 +142,20 @@
                                             <img src="{% static 'icons/default-JavaScript.png' %}" alt="File Icon"
                                                  class="file-icon"/> </a>
                                     {% elif file.file_upload.url|lower|slice:'-4:' == '.txt' %}
-                                        <a href="{% url 'images_details' file.id %}">
+                                        <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
                                             <img src="{% static 'icons/default-Text.png' %}"
-                                                 class="file-icon" alt="File Icon"/> </a>
+                                                 class="file-icon" alt="File Icon"/>
+                                        </a>
                                     {% else %}
                                         <img src="{% static 'icons/default-image.png' %}" alt="File Icon"
                                              class="file-icon"/>
                                     {% endif %}
+                                    {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-4:' == '.gif' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
+                                    {% else %}
                                     <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
                                         <h3> {{ file.file_name|truncatechars:10 }}</h3>
                                     </a>
+                                    {% endif %}
                                     <p class="card-title">{{ file.upload_date }}</p>
                                     <form method="post" action="">
                                         <div class="d-flex justify-content-start align-items-center">
@@ -204,7 +208,7 @@
                         <div class="menu">
                             <div class="file-icon-container">
                                 {% if file.file_upload.url|lower|slice:'-4:' == ".pdf" %}
-                                    <a href="{% url 'images_details' file.id %}">
+                                    <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
                                         <img src="{% static 'icons/pdf-icon.png' %}" alt="PDF Icon"
                                              class="file-icon"/>
                                     </a>
@@ -246,7 +250,7 @@
                                         <img src="{% static 'icons/default-python.png' %}"
                                              class="file-icon" alt="File=icon"> </a>
                                 {% elif file.file_upload.url|lower|slice:'-4:' == '.txt' %}
-                                    <a href="{% url 'images_details' file.id %}">
+                                    <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
                                         <img src="{% static 'icons/default-Text.png' %}"
                                              class="file-icon" alt="File Icon"/> </a>
                                 {% elif file.file_upload.url|lower|slice:'-5:' == '.html' %}
