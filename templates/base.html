@@ -21,10 +21,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <h1 class="navbar-brand navbar-brand-autodark">
-                <a href="">
-                    <h1 style="text-decoration: None; color: #5b80b2">MyDrive </h1>
-                </a>
-
             </h1>
             <div class="navbar-nav flex-row d-lg-none">
                 <div class="nav-item d-none d-lg-flex me-3">
@@ -277,9 +273,8 @@
                     {% endif %}
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <div class="dropdown-divider"></div>
-                        <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
                         <a href="{% url 'user_preference' %}" class="dropdown-item">User Preference</a>
-                        {#                                                <a href="./sign-in.html" class="dropdown-item">Logout</a>#}
+                        <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
                     </div>
                 </div>
             </div>

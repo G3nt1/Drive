@@ -22,7 +22,6 @@
                 <tr class="text-strong">
                     <th>Name</th>
                     <th>Last Modified</th>
-                    <th>File size</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -33,7 +32,6 @@
                             <i class="ti ti-folder-filled text-warning"></i> {{ folder.folder_name }}</a>
                         </td>
                         <td>{{ folder.folder_date }}</td>
-                        <td></td>
                         <td class="text-end actions">
                             <form method="post" action="">
                                 <div class="d-flex justify-content-start align-items-center">
@@ -53,9 +51,6 @@
                                         <a href="{% url 'delete_folder' folder.id %}">
                                             <i class="ti ti-trash" title="Delete"></i>
                                         </a>
-                                        {#                                        <a href="{% url 'shared_folder' folder.id %}" class="me-2">#}
-                                        {#                                            <i class="ti ti-brand-stackshare" title="Share"></i>#}
-                                        {#                                        </a>#}
                                         <a href="{% url 'export_files_by_id' folder.id %}" class="me-2">
                                             <i class="ti ti-file-export" title="export"></i>
                                         </a>
@@ -68,17 +63,17 @@
                 {% for file in files %}
                     <tr>
                         <td>
-                            <a href="#" onclick="openFile('{{ file.file_upload.url }} ')">
-                                <i class="ti ti-file text-success"></i> {{ file.file_name }}
-                            </a>
-
+                            {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-4:' == '.pdf' or file.file_upload.url|lower|slice:'-4:' == '.txt' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
+                                <a href="{% url 'images_details' file.id %}">
+                                    <i class="ti ti-file text-success"></i> {{ file.file_name }}
+                                </a>
+                            {% else %}
+                                <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                    <i class="ti ti-file text-success"></i> {{ file.file_name }}
+                                </a>
+                            {% endif %}
                         </td>
                         <td>{{ file.upload_date }}</td>
-                        {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
-                            <td>{{ file.content|linebreaks }}</td>
-                        {% else %}
-                            <td>{{ file_size }}</td>
-                        {% endif %}
                         <td class="text-end actions">
                             <form method="post" action="">
                                 <div class="d-flex justify-content-start align-items-center">
@@ -101,18 +96,20 @@
                                         <a href="{% url 'shared_file' file.id %}" class="me-2">
                                             <i class="ti ti-brand-stackshare" title="Share"></i>
                                         </a>
-                                        {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
+                                        {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-4:' == '.pdf' or file.file_upload.url|lower|slice:'-4:' == '.txt' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
                                             <a href="{% url 'images_details' file.id %}" class="me-2">
                                                 <i class="ti ti-list-details" title="Details"></i>
+                                            </a>
+                                        {% else %}
+                                            <a href="#" onclick="openFile('{{ file.file_upload.url }}')">
+                                                <i class="ti ti-file text-success"></i> {{ file.file_name }}
                                             </a>
                                         {% endif %}
                                     </div>
                             </form>
                         </td>
-
                     </tr>
                 {% endfor %}
-
                 {% for file in content %}
                     <tr>
                         <td>
@@ -124,11 +121,6 @@
                         </td>
                         <td>{{ file.upload_date }}</td>
                         <td>{{ file.upload_date }}</td>
-                        {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
-                            <td>{{ file.content|linebreaks }}</td>
-                        {% else %}
-                            <td>{{ file_size }}</td>
-                        {% endif %}
                         <td class="text-end actions">
                             <form method="post" action="">
                                 <div class="d-flex justify-content-start align-items-center">

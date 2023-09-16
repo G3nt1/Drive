@@ -2,7 +2,6 @@
 {% block content %}
     <div class="row">
         {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
-            <!-- Render the image as you want -->
             <div class="col-md-9">
                 <div class="preview-img-container" style="background-image: url('{{ file.file_upload.url }}');">
                 </div>
@@ -29,7 +28,7 @@
                 <div class="card" style="background: #000">
                     <div class="card-body">
                         <p class="card-title">
-                        <h1 style="text-align: center">{{ file.file_name }}</h1></p>
+                        <h1 style="text-align: center">{{ file.file_name }}</h1>
                         <p class="card-text" id="location-data">
                             {{ file.content | linebreaks | safe }}
                         </p>
