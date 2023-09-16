@@ -86,7 +86,6 @@
                 {% endfor %}
         </div>
     </div>
-    {% if user.is_authenticated %}
         <div class="row">
             {% for file in files %}
                 <div class="col-lg-2 col-md-6 col-sm-6 mb-4">
@@ -188,8 +187,6 @@
                 </div>
             {% endfor %}
         </div>
-    {% endif %}
-
 {% if user.is_authenticated %}
     <div class="row">
         {% for file in content %}
