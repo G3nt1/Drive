@@ -5,25 +5,26 @@
 {% block content %}
 
     <div class="page page-center">
-        <div class="container container-tight py-4">
-            <div class="card card-md">
+        <div class="container container-tight py-4 expand-lg  {% if is_mobile_or_tablet %}
+    expand-lg
+{% endif %}">
+            <div class="card card-lg">
                 <div class="card-body">
                     <h2 class="h2 text-center mb-4">Login to your account</h2>
                     <form action="{% url 'user_login' %}" method="post">
                         {{ form | crispy }}
                         {% csrf_token %}
-
                         <input type="submit" class="btn btn-outline-secondary" value="Submit"/>
                     </form>
                     <div class="text-center text-muted mt-3">
-                        Forget the password?<a href="{% url 'password_reset' %}" tabindex="-1"> Reset </a>
+                        Forget the password? <a href="{% url 'password_reset' %}" tabindex="-1"> Reset </a>
                     </div>
                     <div class="text-center text-muted mt-3">
-                        Don't have account yet? <a href="{% url 'register' %}" tabindex="-1">Sign up</a>
+                        Don't have an account yet? <a href="{% url 'register' %}" tabindex="-1">Sign up</a>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+
 {% endblock %}
