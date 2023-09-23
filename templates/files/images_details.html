@@ -23,11 +23,13 @@
             color: white;
         }
     </style>
-
+    <div class="container mt-4">
     <div class="row">
         {% if file.file_upload.url|lower|slice:'-4:' == '.jpg' or file.file_upload.url|lower|slice:'-4:' == '.png' or file.file_upload.url|lower|slice:'-5:' == '.jpeg' %}
             <div class="col-md-8">
-                <div class="preview-img-container" style="background-image: url('{{ file.file_upload.url }}');">
+                <div class="card">
+                    <img src="{{ file.file_upload.url }}" class="card-img-top" alt="Image"
+                         style="width: 100%; max-height: 100%;">
                 </div>
             </div>
             <div class="col-md-4">
@@ -37,8 +39,6 @@
                         <p class="card-text" id="location-data">
                             {{ file.content | linebreaks | safe }}
                         </p>
-
-
                         <a href="{{ file.file_upload.url }}" class="glass-download-button" download>
                             Download
                         </a>
@@ -53,28 +53,27 @@
                 {% endif %}
             </div>
         {% else %}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="preview-img-container">
-                        <div class="mx-auto" style="width: 800px;">
-                            <div class="card bg-white text-dark">
-                                <div class="card-body">
-                                    <h1 class="card-title text-center">{{ file.file_name }}</h1>
-                                    <p class="card-text" id="location-data">
-                                        {{ file.content | linebreaks | safe }}
-                                    </p>
-                                </div>
+            <div class="col-md-12">
+                <div class="preview-img-container">
+                    <div class="mx-auto" style="width: 800px;">
+                        <div class="card bg-white text-dark">
+                            <div class="card-body">
+                                <h1 class="card-title text-center">{{ file.file_name }}</h1>
+                                <p class="card-text" id="location-data">
+                                    {{ file.content | linebreaks | safe }}
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="col-md-12">
                 <a href="{{ file.file_upload.url }}" class="glass-download-button" download>
                     Download
                 </a>
             </div>
-            </div>
         {% endif %}
+    </div>
+    </div>
 {% endblock %}
 
