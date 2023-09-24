@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from drive.views import trashViews, fileFolderViews, authViews, views, zipfile, important, share
+from drive.views.views import autocomplete
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -38,6 +39,7 @@ urlpatterns = [
 
     # Search
     path('search', views.search, name='search'),
+    path('autocomplete/', autocomplete, name='autocomplete'),
 
     path('important', views.important, name='is_important'),
     path('export-all-files/', zipfile.export_all_files, name='export_all_files'),

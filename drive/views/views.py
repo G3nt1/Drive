@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 
@@ -92,6 +93,27 @@ def search(request):
         'files': results_files,
         'content': results_content
     })
+
+
+def autocomplete(request):
+    query = request.GET.get('query')
+    user = request.user  # Make sure the user is authenticated
+
+    if query:
+        results_folder = Folder.objects.filter(folder_name__icontains=query)
+        folder_name = [folder.folder_name for folder in results_folder]
+
+        results_files = Files.objects.filter(file_name__icontains=query)
+        file_name = [file.file_name for file in results_files]
+
+        response_data = {
+            'file_name': file_name,
+            'folder_name': folder_name,
+        }
+
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({}, safe=False)  # Return an empty JSON object if no results found
 
 
 def user_preference(request):

@@ -292,11 +292,13 @@
                                             d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path
                                             d="M21 21l-6 -6"></path></svg>
                                 </span>
-                                <input type="text" name="query" value="{{ search_term }}" class="form-control"
+                                <input type="text" id="search-input" name="query" value="{{ search_term }}"
+                                       class="form-control"
                                        placeholder="Search…"
                                        aria-label="Search in website">
                             </div>
                         </form>
+                        <div id="autocomplete-results"></div>
                     </div>
                 </div>
             </div>
@@ -311,5 +313,60 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta19/dist/js/tabler.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#search-input").on("input", function () {
+            var query = $(this).val();
+
+            // Make an AJAX request to the autocomplete view
+            $.ajax({
+                url: "{% url 'autocomplete' %}",
+                data: {query: query},
+                dataType: "json",
+                success: function (data) {
+                    var resultsDiv = $("#autocomplete-results");
+                    resultsDiv.empty();
+
+                    // Display folder names
+                    if (data.folder_name.length > 0) {
+                        resultsDiv.append("<h4>Folder Names</h4>");
+                        var folderList = $("<ul>");
+                        $.each(data.folder_name, function (index, folderName) {
+                            var listItem = $("<li>" + folderName + "</li>");
+                            listItem.click(function () {
+                                // Populate the search input field with the selected item
+                                $("#search-input").val(folderName);
+                                resultsDiv.empty(); // Clear the suggestions
+                            });
+                            folderList.append(listItem);
+                        });
+                        resultsDiv.append(folderList);
+                    }
+
+                    // Display file names
+                    if (data.file_name.length > 0) {
+                        resultsDiv.append("<h4>File Names</h4>");
+                        var fileList = $("<ul>");
+                        $.each(data.file_name, function (index, fileName) {
+                            var listItem = $("<li>" + fileName + "</li>");
+                            listItem.click(function () {
+                                // Populate the search input field with the selected item
+                                $("#search-input").val(fileName);
+                                resultsDiv.empty(); // Clear the suggestions
+                            });
+                            fileList.append(listItem);
+                        });
+                        resultsDiv.append(fileList);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
